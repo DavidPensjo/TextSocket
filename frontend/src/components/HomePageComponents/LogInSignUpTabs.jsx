@@ -1,4 +1,5 @@
-import { React, useState } from "react";
+import { useState } from "react";
+import { useHistory } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,6 +13,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PasswordInput } from "@/components/ui/password-input";
+import { ToastAction } from "@/components/ui/toast";
+import { useToast } from "@/components/ui/use-toast";
+import axios from "axios";
 
 function LoginRegisterTabs() {
   const [logInUserName, setLogInUserName] = useState("");
@@ -24,8 +28,61 @@ function LoginRegisterTabs() {
   const [registerPasswordConfirmation, setRegisterPasswordConfirmation] =
     useState("");
 
-  function handleSignUp() {}
-  function handleLogIn() {}
+  const { toast } = useToast();
+  const history = useHistory();
+
+  const handleSignUp = async () => {
+    if (
+      !registerUserName ||
+      !registerEmail ||
+      !registerPassword ||
+      !registerPasswordConfirmation
+    ) {
+      toast({
+        variant: "destructive",
+        title: "Error signing up",
+        description: "Please fill all of the fields to sign up.",
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      });
+      return;
+    }
+
+    if (registerPassword !== registerPasswordConfirmation) {
+      toast({
+        variant: "destructive",
+        title: "Error signing up",
+        description: "Passwords do not match.",
+        action: <ToastAction altText="Try again">Try again</ToastAction>,
+      });
+      return;
+    }
+
+    try {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+      const { data } = await axios.post(
+        "/api/user",
+        { registerUserName, registerEmail, registerPassword },
+        config
+      );
+      toast({
+        title: "Signed up successfully",
+        description: "You have successfully signed up.",
+      });
+      localStorage.setItem("userInfo", JSON.stringify(data));
+      history.push("/chats");
+    } catch (err) {
+      toast({
+        variant: "destructive",
+        title: "Error signing up",
+        description: err.response.data.message || "Something went wrong.",
+      });
+    }
+  };
+  const handleLogIn = async () => {};
 
   return (
     <Tabs defaultValue="account" className="w-[400px]">
@@ -101,7 +158,7 @@ function LoginRegisterTabs() {
             </div>
           </CardContent>
           <CardFooter>
-            <Button>Sign up</Button>
+            <Button onClick={handleSignUp}>Sign up</Button>
           </CardFooter>
         </Card>
       </TabsContent>

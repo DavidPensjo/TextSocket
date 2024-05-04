@@ -57,4 +57,4 @@ const authUser = asyncHandler(async (req, res) => {
   }
 });
 
-export default registerUser;
+export { registerUser, authUser };
