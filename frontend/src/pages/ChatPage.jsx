@@ -4,7 +4,6 @@ import ChatDashboard from "@/components/ChatPageComponents/ChatDashboard";
 
 const ChatPage = () => {
   const { user } = ChatState();
-  console.log(user);
   return (
     <div className="w-full flex gap-5">
       {user && <MyChats />}

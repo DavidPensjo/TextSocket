@@ -27,7 +27,7 @@ const NewChatDialog = () => {
   const [loading, setLoading] = useState(false);
   const [loadingChat, setLoadingChat] = useState(false);
 
-  const { user } = ChatState();
+  const { user, setSelectedChat, chats, setChats } = ChatState();
   const { toast } = useToast();
   const history = useHistory();
 
@@ -62,7 +62,33 @@ const NewChatDialog = () => {
     }
   };
 
-  const accessChat = (userId) => {};
+  const accessChat = async (userId) => {
+    try {
+      setLoadingChat(true);
+      const config = {
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
+      };
+      const { data } = await axios.post("/api/chat", { userId }, config);
+
+      const chatExists = chats.find((chat) => chat._id === data._id);
+      if (!chatExists) {
+        setChats([data, ...chats]);
+      }
+
+      setSelectedChat(data);
+      setLoadingChat(false);
+    } catch (error) {
+      setLoadingChat(false);
+      toast({
+        variant: "destructive",
+        title: "Error accessing chat",
+        description: error.response.data.message || "Something went wrong.",
+      });
+    }
+  };
 
   return (
     <Dialog>

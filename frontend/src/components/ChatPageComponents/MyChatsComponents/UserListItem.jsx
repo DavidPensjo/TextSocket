@@ -1,7 +1,6 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const UserListItem = ({ user, handleFunction }) => {
-  console.log(user);
   return (
     <div onClick={handleFunction} className="cursor-pointer ">
       <div className="flex items-center space-x-4 h-[80px] w-[330px] bg-[#676773] rounded-xl">
