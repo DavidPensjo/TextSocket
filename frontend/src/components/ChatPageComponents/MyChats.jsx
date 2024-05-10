@@ -11,7 +11,7 @@ import LoggedInUser from "./MyChatsComponents/LoggedInUser";
 import { toast, useToast } from "@/components/ui/use-toast";
 import axios from "axios";
 
-const MyChats = () => {
+const MyChats = ({ fetchAgain }) => {
   const { toast } = useToast();
   const [loggedUser, setLoggedUser] = useState();
   const { user, selectedChat, setSelectedChat, chats, setChats } = ChatState();
@@ -35,7 +35,7 @@ const MyChats = () => {
   useEffect(() => {
     setLoggedUser(JSON.parse(localStorage.getItem("userInfo")));
     fetchChats();
-  }, []);
+  }, [fetchAgain]);
 
   return (
     <div className="bg-[#494959] h-[760px] w-[380px] rounded-[8px] flex flex-col">
@@ -47,7 +47,6 @@ const MyChats = () => {
           ></input>
           <NewChatDialog />
         </div>
-
         <NewGroupDialog />
       </div>
 
@@ -77,10 +76,14 @@ const MyChats = () => {
       <div className="pt-6 pl-3">
         <div className="flex flex-row w-[322px] h-[60px] rounded-[10px] items-center pl-2 underline">
           <Avatar className="cursor-pointer">
-            <AvatarImage src="/pepe.png" />
+            <AvatarImage src={user.picture} />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
-          <LoggedInUser />
+          <LoggedInUser
+            selectedChat={selectedChat}
+            loggedUser={loggedUser}
+            user={user}
+          />
         </div>
       </div>
     </div>
