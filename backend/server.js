@@ -7,6 +7,7 @@ import chatRoutes from "./routes/chatRoutes.js";
 import messageRoutes from "./routes/messageRoutes.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import { Server as SocketIOServer } from "socket.io";
+import path from "path";
 
 const app = express();
 dotenv.config();
@@ -14,13 +15,27 @@ connectDB();
 
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("Server is running");
-});
 
 app.use("/api/user", userRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/message", messageRoutes);
+
+//** DEPLOYMENT */
+
+const __dirname1 = path.resolve();
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname1, "/frontend/dist")));
+
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname1, "frontend", "dist", "index.html"));
+  });
+} else {
+  app.get("/", (req, res) => {
+    res.send("API is running successfully");
+  });
+}
+
+//** DEPLOYMENT */
 
 app.use(notFound);
 app.use(errorHandler);
@@ -60,5 +75,9 @@ io.on("connection", (socket) => {
 
       socket.to(user._id).emit("message recieved", newMessageRecieved);
     });
+  });
+  socket.off("setup", () => {
+    console.log("Disconnected from socket.io");
+    socket.leave(userData._id);
   });
 });
