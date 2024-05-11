@@ -2,8 +2,6 @@ import { ChatState } from "@/Context/ChatProvider";
 import MyChats from "@/components/ChatPageComponents/MyChats";
 import ChatDashboard from "@/components/ChatPageComponents/ChatDashboard";
 import ChatBox from "@/components/ChatPageComponents/ChatBox";
-import ChatMessages from "@/components/ChatPageComponents/IncomingMessage";
-import OutgoingMessage from "@/components/ChatPageComponents/OutgoingMessage";
 import { useState } from "react";
 
 const ChatPage = () => {
