@@ -3,19 +3,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 const ChatSkeleton = () => {
   return (
     <>
-      <div className="flex items-center space-x-4">
-        <Skeleton className="h-12 w-12 rounded-full" />
-        <div className="space-y-2">
-          <Skeleton className="h-4 w-[250px]" />
-          <Skeleton className="h-4 w-[200px]" />
-        </div>
-      </div>{" "}
-      <div className="flex items-center space-x-4">
-        <Skeleton className="h-12 w-12 rounded-full" />
-        <div className="space-y-2">
-          <Skeleton className="h-4 w-[250px]" />
-          <Skeleton className="h-4 w-[200px]" />
-        </div>
+      <div className="bg-[#494959] h-[80px] w-[560px] rounded-[8px]">
+        <Skeleton className="flex flex-row items-center h-[80px] pl-5" />
       </div>
     </>
   );

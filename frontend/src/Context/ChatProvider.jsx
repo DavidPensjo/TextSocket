@@ -1,13 +1,14 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { useHistory } from "react-router-dom"; // Assuming you're using react-router for navigation
+import { useHistory } from "react-router-dom";
 
 const ChatContext = createContext();
 
 const ChatProvider = ({ children }) => {
-  const [user, setUser] = useState(null); // manages the logged-in user's state
+  const [user, setUser] = useState(null);
+  const [loggedUser, setLoggedUser] = useState(null);
   const [selectedChat, setSelectedChat] = useState(null);
   const [chats, setChats] = useState([]);
-  const [loggedUser, setLoggedUser] = useState(null); // Additional state for loggedUser
+  const [isLoading, setIsLoading] = useState(true);  // Manage loading state
   const history = useHistory();
 
   useEffect(() => {
@@ -17,13 +18,14 @@ const ChatProvider = ({ children }) => {
         if (userInfo) {
           const parsedUser = JSON.parse(userInfo);
           setUser(parsedUser);
-          setLoggedUser(parsedUser); // Assuming loggedUser mirrors the 'user'
+          setLoggedUser(parsedUser);
+          setIsLoading(false);  // Set loading to false on successful fetch
         } else {
-          history.push("/login"); // Redirect if no user info found
+          history.push("/"); // Redirect if no user info found
         }
       } catch (error) {
         console.error("Failed to retrieve or parse user info:", error);
-        history.push("/login"); // Redirect on error
+        history.push("/"); // Redirect on error
       }
     };
 
@@ -35,11 +37,13 @@ const ChatProvider = ({ children }) => {
       value={{
         user,
         setUser,
-        loggedUser, // Making loggedUser available throughout the application
+        loggedUser,
+        setLoggedUser,
         selectedChat,
         setSelectedChat,
         chats,
-        setChats
+        setChats,
+        isLoading  // Make isLoading available to consumers
       }}
     >
       {children}

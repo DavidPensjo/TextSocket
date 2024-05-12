@@ -5,6 +5,7 @@ import { ChevronUp } from "lucide-react";
 import { ChatState } from "@/Context/ChatProvider";
 import ScrollableChat from "./ScrollableChat";
 import io from "socket.io-client";
+import ChatSkeleton from "./MyChatsComponents/ChatSkeleton";
 
 const ENDPOINT = "http://localhost:5000";
 let socket, selectedChatCompare;
@@ -106,7 +107,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   return (
     <>
       {loading ? (
-        <p>Loading...</p>
+        <ChatSkeleton />
       ) : (
         <div>
           <ScrollableChat

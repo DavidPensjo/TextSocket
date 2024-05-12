@@ -18,7 +18,7 @@ import { useHistory } from "react-router-dom";
 import { ToastAction } from "@/components/ui/toast";
 import { toast, useToast } from "@/components/ui/use-toast";
 import axios from "axios";
-import ChatLoading from "./ChatSkeleton";
+import ChatLoading from "./ChatPreviewSkeleton";
 import UserListItem from "./UserListItem";
 
 const NewChatDialog = () => {

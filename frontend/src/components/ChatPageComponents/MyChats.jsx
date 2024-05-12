@@ -16,6 +16,7 @@ const MyChats = ({ fetchAgain }) => {
     ChatState();
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
+  console.log(loggedUser);
 
   useEffect(() => {
     const fetchChats = async () => {
