@@ -97,7 +97,7 @@ const NewChatDialog = () => {
           <NewChat />
         </a>
       </DialogTrigger>
-      <DialogContent className="bg-[#494959] sm:max-w-[425px] h-[400px] rounded flex flex-col items-center border-[#494959]">
+      <DialogContent className="bg-[#494959] sm:max-w-[425px] rounded flex flex-col items-center border-[#494959] overflow-y-auto max-h-[800px]">
         <DialogHeader>
           <DialogTitle className="text-[#CFDBEC]">
             Start a new conversation.
@@ -124,7 +124,7 @@ const NewChatDialog = () => {
         {loading ? (
           <ChatLoading />
         ) : (
-          searchResults?.map((user) => (
+          searchResults?.slice(0, 4).map((user) => (
             <UserListItem
               key={user._id}
               user={user}

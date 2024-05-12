@@ -13,14 +13,6 @@ const ChatPage = () => {
       {user && <MyChats user={user} fetchAgain={fetchAgain} />}
       <div className="flex flex-col justify-between h-[750px]">
         {user && (
-          <ChatDashboard
-            fetchAgain={fetchAgain}
-            setFetchAgain={setFetchAgain}
-          />
-        )}
-        {/* {user && <OutgoingMessage className="h-[600px]" />}
-        {user && <ChatMessages className="h-[600px]" />} */}
-        {user && (
           <ChatBox
             fetchAgain={fetchAgain}
             setFetchAgain={setFetchAgain}

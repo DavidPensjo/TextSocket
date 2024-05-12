@@ -33,7 +33,6 @@ function Login() {
       return;
     }
 
-    // Normalize email to lower case
     const normalizedEmail = email.toLowerCase();
 
     try {

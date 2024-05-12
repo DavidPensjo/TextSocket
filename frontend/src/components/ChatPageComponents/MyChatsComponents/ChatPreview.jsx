@@ -2,7 +2,15 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getSender } from "@/config/ChatLogics";
 
 const ChatPreview = ({ selectedChat, chat, loggedUser, user }) => {
-  console.log(chat.latestMessage);
+  const getOtherParticipant = (chat, loggedUserId) => {
+    return chat.users.find((user) => user._id !== loggedUserId);
+  };
+
+  // Use the function to find the other participant
+  const otherParticipant = chat.isGroupChat
+    ? null
+    : getOtherParticipant(chat, loggedUser._id);
+
   return (
     <div
       className={`h-[80px] w-[330px] rounded-xl grid grid-cols-7 grid-rows-3 cursor-pointer ${
@@ -11,8 +19,13 @@ const ChatPreview = ({ selectedChat, chat, loggedUser, user }) => {
     >
       <div className="col-start-1 row-start-2 flex items-center justify-center pl-3">
         <Avatar>
-          <AvatarImage src={user.picture} />
-          <AvatarFallback>CN</AvatarFallback>
+          {otherParticipant ? (
+            <AvatarImage
+              src={otherParticipant.picture || "defaultAvatar.webp"}
+            />
+          ) : (
+            <AvatarFallback className="font-semibold pb-0.5">{chat.isGroupChat ? "G" : "U"}</AvatarFallback> // 'G' for Group, 'U' for Undefined
+          )}
         </Avatar>
       </div>
       <p className="text-white font-extrabold text-base col-start-2 row-start-1 col-span-4 pt-1 pl-4">

@@ -13,7 +13,7 @@ import axios from "axios";
 
 const MyChats = ({ fetchAgain }) => {
   const { toast } = useToast();
-  const [loggedUser, setLoggedUser] = useState();
+  const [loggedUser, setLoggedUser] = useState(null);
   const { user, selectedChat, setSelectedChat, chats, setChats } = ChatState();
   const fetchChats = async () => {
     try {
@@ -36,7 +36,7 @@ const MyChats = ({ fetchAgain }) => {
     setLoggedUser(JSON.parse(localStorage.getItem("userInfo")));
     fetchChats();
   }, [fetchAgain]);
-
+  console.log(loggedUser);
   return (
     <div className="bg-[#494959] h-[760px] w-[380px] rounded-[8px] flex flex-col">
       <div className="flex w-[380px] gap-3 pt-4 pl-5">
@@ -76,8 +76,11 @@ const MyChats = ({ fetchAgain }) => {
       <div className="pt-6 pl-3">
         <div className="flex flex-row w-[322px] h-[60px] rounded-[10px] items-center pl-2 underline">
           <Avatar className="cursor-pointer">
-            <AvatarImage src={user.picture} />
-            <AvatarFallback>CN</AvatarFallback>
+            {loggedUser ? (
+              <AvatarImage src={loggedUser.picture} />
+            ) : (
+              <AvatarFallback>Loading...</AvatarFallback> // Show "Loading..." or a spinner image
+            )}
           </Avatar>
           <LoggedInUser
             selectedChat={selectedChat}
