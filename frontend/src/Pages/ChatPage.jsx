@@ -9,16 +9,18 @@ const ChatPage = () => {
   const [fetchAgain, setFetchAgain] = useState(false);
 
   return (
-    <div className="w-[1000px] h-[800px] flex gap-5 bg-[#2B2B3C] rounded-[15px] p-4">
-      {user && <MyChats user={user} fetchAgain={fetchAgain} />}
-      <div className="flex flex-col justify-between h-[750px]">
-        {user && (
-          <ChatBox
-            fetchAgain={fetchAgain}
-            setFetchAgain={setFetchAgain}
-            className="m-5"
-          />
-        )}
+    <div className="w-screen h-screen flex justify-center items-center pb-10 bg-gray-700">
+      <div className="w-[1000px] h-[800px] flex gap-5 bg-[#2B2B3C] rounded-[15px] p-4">
+        {user && <MyChats user={user} fetchAgain={fetchAgain} />}
+        <div className="flex flex-col justify-between h-[750px]">
+          {user && (
+            <ChatBox
+              fetchAgain={fetchAgain}
+              setFetchAgain={setFetchAgain}
+              className="m-5"
+            />
+          )}
+        </div>
       </div>
     </div>
   );
