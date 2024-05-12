@@ -1,11 +1,28 @@
 import React, { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Users, UserPlus, UserMinus } from "lucide-react";
-import axios from "axios";
 import { ChatState } from "@/Context/ChatProvider";
 
 const ChatDashboard = () => {
-  const { selectedChat, loggedUser, setChats } = ChatState();
+  const { selectedChat, loggedUser } = ChatState();
+  const [sender, setSender] = useState(null);
+
+  useEffect(() => {
+    if (selectedChat && !selectedChat.isGroupChat) {
+      // Assuming there are only two users in the chat, filter out the loggedUser
+      const otherUser = selectedChat.users.find(
+        (user) => user._id !== loggedUser._id
+      );
+      setSender(otherUser);
+    } else {
+      // For group chats or other scenarios, handle accordingly
+      setSender(null); // or set to a default group chat user object if needed
+    }
+  }, [selectedChat, loggedUser]);
+
+  if (!sender) {
+    return <div>Loading or no other participant...</div>; // Handle no sender or loading state
+  }
 
   const removeUserFromChat = async () => {
     try {
@@ -17,15 +34,13 @@ const ChatDashboard = () => {
         },
         {
           headers: {
-            Authorization: `Bearer ${loggedUser.token}`, // Assuming token is stored in loggedUser
+            Authorization: `Bearer ${loggedUser.token}`,
             "Content-Type": "application/json",
           },
         }
       );
-
       if (response.data.success) {
         alert("You have been removed from the chat.");
-        // Optionally update local chat state or trigger any other updates
       } else {
         alert("Failed to remove from the chat.");
       }
@@ -48,11 +63,18 @@ const ChatDashboard = () => {
           {sender.userName}
         </span>
         <div className="flex flex-row text-[#CFDBEC] gap-4 ml-auto pr-5">
-          <Users className="h-[29px] w-[29px]" />
-          <UserPlus className="h-[29px] w-[29px]" />
-          <button onClick={removeUserFromChat} className="text-[#CA5E5E]">
-            <UserMinus className="h-[29px] w-[29px]" />
-          </button>
+          <a>
+            <Users className="h-[29px] w-[29px]" />
+          </a>
+          <a>
+            <UserPlus className="h-[29px] w-[29px]" />
+          </a>
+          <a>
+            <UserMinus
+              onClick={removeUserFromChat}
+              className="text-[#CA5E5E] h-[29px] w-[29px]"
+            />
+          </a>
         </div>
       </div>
     </div>
