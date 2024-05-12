@@ -39,13 +39,13 @@ const ChatDashboard = () => {
     <div className="bg-[#494959] h-[80px] w-[560px] rounded-[8px]">
       <div className="flex flex-row items-center h-[80px] pl-5">
         <Avatar className="cursor-pointer">
-          <AvatarImage
-            src={loggedUser?.picture || "default_fallback_picture_url"}
-          />
-          <AvatarFallback>{loggedUser?.userName[0] || "U"}</AvatarFallback>
+          <AvatarImage src={sender.picture || "default_fallback_picture_url"} />
+          <AvatarFallback>
+            {sender.userName ? sender.userName[0] : "U"}
+          </AvatarFallback>
         </Avatar>
         <span className="text-[#94A3B8] font-bold text-xl pl-3 pt-1 cursor-pointer">
-          {loggedUser?.userName}
+          {sender.userName}
         </span>
         <div className="flex flex-row text-[#CFDBEC] gap-4 ml-auto pr-5">
           <Users className="h-[29px] w-[29px]" />
