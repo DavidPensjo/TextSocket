@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import NewGroupDialog from "./MyChatsComponents/NewGroupDialog";
 import { ChatState } from "@/Context/ChatProvider";
 import ChatPreview from "./MyChatsComponents/ChatPreview";
@@ -8,13 +8,16 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import NewChatDialog from "./MyChatsComponents/NewChatDialog";
 import LoggedInUser from "./MyChatsComponents/LoggedInUser";
-import { toast, useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 import axios from "axios";
 
 const MyChats = ({ fetchAgain }) => {
   const { toast } = useToast();
   const [loggedUser, setLoggedUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   const { user, selectedChat, setSelectedChat, chats, setChats } = ChatState();
+  const [searchTerm, setSearchTerm] = useState("");
+
   const fetchChats = async () => {
     try {
       const config = {
@@ -32,11 +35,37 @@ const MyChats = ({ fetchAgain }) => {
       });
     }
   };
+
+  const filteredChats = chats.filter((chat) =>
+    chat.isGroupChat
+      ? chat.chatName.toLowerCase().includes(searchTerm.toLowerCase())
+      : chat.users.some(
+          (user) =>
+            user.userName.toLowerCase().includes(searchTerm.toLowerCase()) &&
+            user._id !== loggedUser._id
+        )
+  );
+
   useEffect(() => {
-    setLoggedUser(JSON.parse(localStorage.getItem("userInfo")));
+    try {
+      const userInfo = localStorage.getItem("userInfo");
+      if (userInfo) {
+        setLoggedUser(JSON.parse(userInfo));
+      } else {
+        setLoggedUser(null);
+      }
+    } catch (error) {
+      console.error("Failed to parse user info from localStorage", error);
+      setLoggedUser(null); // Handle JSON parse error
+    }
+    setIsLoading(false);
     fetchChats();
   }, [fetchAgain]);
-  console.log(loggedUser);
+
+  if (isLoading) {
+    return <div>Loading user data...</div>;
+  }
+
   return (
     <div className="bg-[#494959] h-[760px] w-[380px] rounded-[8px] flex flex-col">
       <div className="flex w-[380px] gap-3 pt-4 pl-5">
@@ -44,21 +73,21 @@ const MyChats = ({ fetchAgain }) => {
           <input
             className="w-[220px] h-[40px] bg-[#2B2B3C] border-[#2B2B3C] text-[#CFDBEC] rounded-l-[10px] pl-2 focus:outline-none"
             placeholder="Search..."
-          ></input>
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
           <NewChatDialog />
         </div>
         <NewGroupDialog />
       </div>
 
       <div className="flex flex-col pt-8 items-center h-[610px]">
-        {chats ? (
+        {filteredChats.length > 0 ? (
           <ScrollArea className="flex flex-col gap-5 w-[338px]">
-            {chats.map((chat) => (
-              <>
-                {" "}
+            {filteredChats.map((chat) => (
+              <React.Fragment key={chat._id}>
                 <a onClick={() => setSelectedChat(chat)}>
                   <ChatPreview
-                    key={chat._id}
                     chat={chat}
                     selectedChat={selectedChat}
                     loggedUser={loggedUser}
@@ -66,20 +95,21 @@ const MyChats = ({ fetchAgain }) => {
                   />
                 </a>
                 <Separator className="my-2.5 bg-[#494959]" />
-              </>
+              </React.Fragment>
             ))}
           </ScrollArea>
         ) : (
-          <ChatLoading />
+          <div>No chats found.</div> // Display when no chat matches the search term
         )}
       </div>
+
       <div className="pt-6 pl-3">
         <div className="flex flex-row w-[322px] h-[60px] rounded-[10px] items-center pl-2 underline">
           <Avatar className="cursor-pointer">
             {loggedUser ? (
               <AvatarImage src={loggedUser.picture} />
             ) : (
-              <AvatarFallback>Loading...</AvatarFallback> // Show "Loading..." or a spinner image
+              <AvatarFallback>U</AvatarFallback> // Show fallback if no picture is available
             )}
           </Avatar>
           <LoggedInUser
