@@ -3,11 +3,9 @@ import { getSender } from "@/config/ChatLogics";
 
 const ChatPreview = ({ selectedChat, chat, loggedUser, user }) => {
   const getOtherParticipant = (chat, loggedUserId) => {
-    // Safely check if users exist and filter out the logged-in user
     return chat.users?.find((user) => user?._id !== loggedUserId);
   };
 
-  // Determine the other participant directly from chat participants
   const otherParticipant = chat.isGroupChat
     ? null
     : getOtherParticipant(chat, loggedUser?._id);
@@ -37,8 +35,6 @@ const ChatPreview = ({ selectedChat, chat, loggedUser, user }) => {
       <div className="text-[#CFDBEC] text-sm col-start-2 row-start-2 col-span-5 pl-4">
         {chat.latestMessage && (
           <span style={{ fontSize: "small" }}>
-            {" "}
-            {/* Changed <p> to <span> */}
             <b>{chat.latestMessage.sender.userName} : </b>
             {chat.latestMessage.content.length > 50
               ? `${chat.latestMessage.content.substring(0, 51)}...`

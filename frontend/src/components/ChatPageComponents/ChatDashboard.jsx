@@ -3,24 +3,22 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Users, UserPlus, UserMinus } from "lucide-react";
 
 const ChatDashboard = ({ sender }) => {
-  // Check if the sender is null or undefined and handle this case
   console.log(sender)
   if (!sender) {
     return <div>Loading or no other participant...</div>;
   }
 
-  // Function to handle the removal of a user from a chat
   const removeUserFromChat = async () => {
     try {
       const response = await axios.put(
         "/api/chat/groupremove",
         {
-          chatId: sender.chat._id, // Assuming sender object includes chat info
+          chatId: sender.chat._id,
           userId: sender._id,
         },
         {
           headers: {
-            Authorization: `Bearer ${sender.token}`, // Assuming sender object includes token
+            Authorization: `Bearer ${sender.token}`,
             "Content-Type": "application/json",
           },
         }
