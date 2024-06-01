@@ -7,8 +7,7 @@ import ScrollableChat from "./ScrollableChat";
 import io from "socket.io-client";
 import ChatSkeleton from "./MyChatsComponents/ChatSkeleton";
 
-// Use the environment variable for the endpoint
-const ENDPOINT = import.meta.env.VITE_API_URL;
+const ENDPOINT = import.meta.env.VITE_API_URL || "http://localhost:5000";
 let socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
@@ -35,39 +34,36 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         config
       );
 
-      setMessages(data || []); // Ensure data is an array
+      setMessages(data);
       setLoading(false);
 
       socket.emit("join chat", selectedChat._id);
     } catch (error) {
       console.error(error);
-      setLoading(false);
     }
   };
 
   useEffect(() => {
     socket = io(ENDPOINT, {
       withCredentials: true,
-      path: "/socket.io", // Ensure this matches your server's path
+      path: "/socket.io",
     });
     socket.emit("setup", user);
-    socket.on("connected", () => setSocketConnected(true)); // Corrected to 'connected'
+    socket.on("connected", () => setSocketConnected(true));
   }, [user]);
 
   useEffect(() => {
     fetchMessages();
-
     selectedChatCompare = selectedChat;
   }, [selectedChat]);
 
   useEffect(() => {
     socket.on("message received", (newMessageReceived) => {
-      // Corrected to 'received'
       if (
         !selectedChatCompare ||
         selectedChatCompare._id !== newMessageReceived.chat._id
       ) {
-        // NOTIFICATION
+        //NOTIFICATION
       } else {
         setMessages((prevMessages) => [...prevMessages, newMessageReceived]);
       }
@@ -119,7 +115,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           <ScrollableChat
             className="flex flex-col"
             style={{ scrollbarWidth: "none" }}
-            messages={Array.isArray(messages) ? messages : []} // Ensure messages is an array
+            messages={messages}
           ></ScrollableChat>
         </div>
       )}

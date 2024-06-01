@@ -11,9 +11,9 @@ const sendMessage = asyncHandler(async (req, res) => {
     throw new Error("Invalid message data");
   }
 
-  let newMessage = {
+  const newMessage = {
     sender: req.user._id,
-    content: content,
+    content,
     chat: chatId,
   };
 
@@ -21,15 +21,15 @@ const sendMessage = asyncHandler(async (req, res) => {
     let message = await Message.create(newMessage);
 
     message = await message.populate("sender", "userName picture");
-    message = await message.populate("chat");
-    message = await User.populate(message, {
-      path: "chat.users",
-      select: "userName picture",
+    message = await message.populate({
+      path: "chat",
+      populate: {
+        path: "users",
+        select: "userName picture",
+      },
     });
 
-    await Chat.findByIdAndUpdate(req.body.chatId, {
-      latestMessage: message,
-    });
+    await Chat.findByIdAndUpdate(req.body.chatId, { latestMessage: message });
 
     res.json(message);
   } catch (error) {
@@ -43,7 +43,13 @@ const allMessages = asyncHandler(async (req, res) => {
   try {
     const messages = await Message.find({ chat: req.params.chatId })
       .populate("sender", "userName picture")
-      .populate("chat");
+      .populate({
+        path: "chat",
+        populate: {
+          path: "users",
+          select: "userName picture",
+        },
+      });
 
     res.json(messages);
   } catch (error) {
