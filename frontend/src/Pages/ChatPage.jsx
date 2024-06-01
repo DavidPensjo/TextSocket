@@ -5,8 +5,12 @@ import ChatBox from "@/components/ChatPageComponents/ChatBox";
 import { useState } from "react";
 
 const ChatPage = () => {
-  const { user } = ChatState();
+  const { user, isLoading } = ChatState();
   const [fetchAgain, setFetchAgain] = useState(false);
+  console.log(user);
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="w-screen h-screen flex justify-center items-center pb-10 bg-gray-700">

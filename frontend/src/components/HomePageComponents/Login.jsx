@@ -14,6 +14,7 @@ import { Label } from "@/components/ui/label";
 import { PasswordInput } from "@/components/ui/password-input";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
+import { ChatState } from "@/Context/ChatProvider"; // Adjust this path as needed
 import axios from "axios";
 
 function Login() {
@@ -21,6 +22,7 @@ function Login() {
   const [password, setPassword] = useState("");
   const { toast } = useToast();
   const history = useHistory();
+  const { setUser } = ChatState();  // Destructure setUser from your context
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -51,7 +53,8 @@ function Login() {
         description: "You have successfully logged in.",
       });
       localStorage.setItem("userInfo", JSON.stringify(data));
-      history.push("/chats");
+      setUser(data);  // Update user state with the logged-in user data
+      history.push("/chats");  // Redirect after state update
     } catch (err) {
       toast({
         variant: "destructive",
@@ -60,6 +63,7 @@ function Login() {
       });
     }
   };
+
   return (
     <Card>
       <CardHeader>

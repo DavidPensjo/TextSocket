@@ -8,7 +8,7 @@ const ChatProvider = ({ children }) => {
   const [loggedUser, setLoggedUser] = useState(null);
   const [selectedChat, setSelectedChat] = useState(null);
   const [chats, setChats] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);  // Manage loading state
+  const [isLoading, setIsLoading] = useState(true); // Manage loading state
   const history = useHistory();
 
   useEffect(() => {
@@ -19,7 +19,7 @@ const ChatProvider = ({ children }) => {
           const parsedUser = JSON.parse(userInfo);
           setUser(parsedUser);
           setLoggedUser(parsedUser);
-          setIsLoading(false);  // Set loading to false on successful fetch
+          setIsLoading(false); // Set loading to false on successful fetch
         } else {
           history.push("/"); // Redirect if no user info found
         }
@@ -30,6 +30,32 @@ const ChatProvider = ({ children }) => {
     };
 
     fetchUserInfo();
+  }, [history]);
+
+  useEffect(() => {
+    let isMounted = true; // Flag to check if component is still mounted
+
+    const fetchUserInfo = async () => {
+      try {
+        const userInfo = localStorage.getItem("userInfo");
+        if (userInfo && isMounted) {
+          const parsedUser = JSON.parse(userInfo);
+          setUser(parsedUser);
+          setLoggedUser(parsedUser);
+        }
+      } catch (error) {
+        console.error("Failed to retrieve or parse user info:", error);
+      }
+      if (isMounted) {
+        setIsLoading(false); // Always set loading to false
+      }
+    };
+
+    fetchUserInfo();
+
+    return () => {
+      isMounted = false; // Set flag to false when component unmounts
+    };
   }, [history]);
 
   return (
@@ -43,7 +69,7 @@ const ChatProvider = ({ children }) => {
         setSelectedChat,
         chats,
         setChats,
-        isLoading  // Make isLoading available to consumers
+        isLoading, // Make isLoading available to consumers
       }}
     >
       {children}

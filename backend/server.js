@@ -15,7 +15,6 @@ connectDB();
 
 app.use(express.json());
 
-
 app.use("/api/user", userRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/message", messageRoutes);
@@ -48,7 +47,8 @@ const server = app.listen(PORT, () =>
 const io = new SocketIOServer(server, {
   pingTimeout: 60000,
   cors: {
-    origin: "http://localhost:5000",
+    origin: process.env.CORS_ORIGIN,
+    credentials: true,
   },
 });
 

@@ -9,7 +9,7 @@ const ChatPreview = ({ selectedChat, chat, loggedUser, user }) => {
   // Use the function to find the other participant
   const otherParticipant = chat.isGroupChat
     ? null
-    : getOtherParticipant(chat, loggedUser._id);
+    : getOtherParticipant(chat, loggedUser?._id);
 
   return (
     <div
@@ -24,7 +24,9 @@ const ChatPreview = ({ selectedChat, chat, loggedUser, user }) => {
               src={otherParticipant.picture || "defaultAvatar.webp"}
             />
           ) : (
-            <AvatarFallback className="font-semibold pb-0.5">{chat.isGroupChat ? "G" : "U"}</AvatarFallback> // 'G' for Group, 'U' for Undefined
+            <AvatarFallback className="font-semibold pb-0.5">
+              {chat.isGroupChat ? "G" : "U"}
+            </AvatarFallback> // 'G' for Group, 'U' for Undefined
           )}
         </Avatar>
       </div>

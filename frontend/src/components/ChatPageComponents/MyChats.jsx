@@ -16,7 +16,6 @@ const MyChats = ({ fetchAgain }) => {
     ChatState();
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  console.log(loggedUser);
 
   useEffect(() => {
     const fetchChats = async () => {
@@ -46,10 +45,11 @@ const MyChats = ({ fetchAgain }) => {
     chat.isGroupChat
       ? chat.chatName.toLowerCase().includes(searchTerm.toLowerCase())
       : chat.users.some(
-          (user) =>
-            user.userName.toLowerCase().includes(searchTerm.toLowerCase()) &&
-            user._id !== loggedUser._id
-        )
+        (chatUser) =>
+          chatUser.userName.toLowerCase().includes(searchTerm.toLowerCase()) &&
+          chatUser._id !== loggedUser?._id
+      )
+      
   );
 
   if (isLoading) {
