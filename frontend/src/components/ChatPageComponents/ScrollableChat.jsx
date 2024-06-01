@@ -1,44 +1,61 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { isLastMessage, isSameSender, isSameSenderMargin, isSameUser } from "@/config/ChatLogics";
+import {
+  isLastMessage,
+  isSameSender,
+  isSameSenderMargin,
+  isSameUser,
+} from "@/config/ChatLogics";
 import ChatDashboard from "./ChatDashboard";
 import { ChatState } from "@/Context/ChatProvider";
 
 const ScrollableChat = ({ messages }) => {
   const { user, selectedChat } = ChatState();
   const sender = useMemo(() => {
-    return selectedChat?.users.find(u => u._id !== user._id) || null;
+    return selectedChat?.users.find((u) => u._id !== user._id) || null;
   }, [selectedChat, user]);
-  
+
+  // Ensure messages is always an array
+  const safeMessages = Array.isArray(messages) ? messages : [];
+
   return (
     <>
       <ChatDashboard sender={sender} />
       <ScrollArea className="h-[600px] w-[575px]">
         <div className="h-[600px] w-[550px] overflow-y-auto">
-          {messages.map((m, i) => (
+          {safeMessages.map((m, i) => (
             <div className="flex items-center" key={m._id}>
-              {(isSameSender(messages, m, i, user._id) || isLastMessage(messages, i, user._id)) && (
-                <TooltipProvider>
+              {(isSameSender(safeMessages, m, i, user._id) ||
+                isLastMessage(safeMessages, i, user._id)) && (
+                <TooltipProvider key={m._id}>
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Avatar className="cursor-pointer mt-1 mr-1">
-                        <AvatarImage src={m.sender.picture || 'defaultAvatar.webp'} />
-                        <AvatarFallback>{m.sender.userName?.[0] || 'U'}</AvatarFallback>
+                        <AvatarImage
+                          src={m.sender.picture || "defaultAvatar.webp"}
+                        />
+                        <AvatarFallback>
+                          {m.sender.userName?.[0] || "U"}
+                        </AvatarFallback>
                       </Avatar>
                     </TooltipTrigger>
-                    <TooltipContent>
-                      {m.sender.userName}
-                    </TooltipContent>
+                    <TooltipContent>{m.sender.userName}</TooltipContent>
                   </Tooltip>
                 </TooltipProvider>
               )}
               <span
                 style={{
-                  backgroundColor: m.sender._id === user._id ? "#4f46e5" : "#494959",
-                  marginLeft: isSameSenderMargin(messages, m, i, user._id),
-                  marginTop: isSameUser(messages, m, i) ? 3 : 10,
+                  backgroundColor:
+                    m.sender._id === user._id ? "#4f46e5" : "#494959",
+                  marginLeft: isSameSenderMargin(safeMessages, m, i, user._id),
+                  marginTop: isSameUser(safeMessages, m, i) ? 3 : 10,
                   borderRadius: "20px",
                   padding: "5px 15px",
                   maxWidth: "75%",

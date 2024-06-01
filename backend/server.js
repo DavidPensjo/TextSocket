@@ -52,10 +52,12 @@ const server = app.listen(PORT, () =>
   console.log(colors.bold(`Server is running on PORT ${PORT}`))
 );
 
+// Socket.IO server configuration
 const io = new SocketIOServer(server, {
   pingTimeout: 60000,
   cors: {
     origin: process.env.CORS_ORIGIN,
+    methods: ["GET", "POST"],
     credentials: true,
   },
 });

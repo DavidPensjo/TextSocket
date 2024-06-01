@@ -7,7 +7,8 @@ import ScrollableChat from "./ScrollableChat";
 import io from "socket.io-client";
 import ChatSkeleton from "./MyChatsComponents/ChatSkeleton";
 
-const ENDPOINT = "http://localhost:5000";
+// Use the environment variable for the endpoint
+const ENDPOINT = import.meta.env.VITE_API_URL;
 let socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
@@ -30,24 +31,28 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       setLoading(true);
 
       const { data } = await axios.get(
-        `/api/message/${selectedChat._id}`,
+        `${ENDPOINT}/api/message/${selectedChat._id}`,
         config
       );
 
-      setMessages(data);
+      setMessages(data || []); // Ensure data is an array
       setLoading(false);
 
       socket.emit("join chat", selectedChat._id);
     } catch (error) {
       console.error(error);
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    socket = io(ENDPOINT);
+    socket = io(ENDPOINT, {
+      withCredentials: true,
+      path: "/socket.io", // Ensure this matches your server's path
+    });
     socket.emit("setup", user);
-    socket.on("connection", () => setSocketConnected(true));
-  }, []);
+    socket.on("connected", () => setSocketConnected(true)); // Corrected to 'connected'
+  }, [user]);
 
   useEffect(() => {
     fetchMessages();
@@ -56,14 +61,15 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   }, [selectedChat]);
 
   useEffect(() => {
-    socket.on("message recieved", (newMessageRecieved) => {
+    socket.on("message received", (newMessageReceived) => {
+      // Corrected to 'received'
       if (
         !selectedChatCompare ||
-        selectedChatCompare._id !== newMessageRecieved.chat._id
+        selectedChatCompare._id !== newMessageReceived.chat._id
       ) {
-        //NOTIFICATION
+        // NOTIFICATION
       } else {
-        setMessages([...messages, newMessageRecieved]);
+        setMessages((prevMessages) => [...prevMessages, newMessageReceived]);
       }
     });
   });
@@ -80,13 +86,13 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
 
         setNewMessage("");
         const { data } = await axios.post(
-          "/api/message",
+          `${ENDPOINT}/api/message`,
           { content: newMessage, chatId: selectedChat._id },
           config
         );
 
         socket.emit("new message", data);
-        setMessages([...messages, data]);
+        setMessages((prevMessages) => [...prevMessages, data]);
       } catch (error) {
         console.error(error);
       }
@@ -113,7 +119,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           <ScrollableChat
             className="flex flex-col"
             style={{ scrollbarWidth: "none" }}
-            messages={messages}
+            messages={Array.isArray(messages) ? messages : []} // Ensure messages is an array
           ></ScrollableChat>
         </div>
       )}
