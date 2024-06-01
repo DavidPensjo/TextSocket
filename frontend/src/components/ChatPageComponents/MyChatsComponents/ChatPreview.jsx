@@ -3,10 +3,11 @@ import { getSender } from "@/config/ChatLogics";
 
 const ChatPreview = ({ selectedChat, chat, loggedUser, user }) => {
   const getOtherParticipant = (chat, loggedUserId) => {
-    return chat.users.find((user) => user._id !== loggedUserId);
+    // Safely check if users exist and filter out the logged-in user
+    return chat.users?.find((user) => user?._id !== loggedUserId);
   };
 
-  // Use the function to find the other participant
+  // Determine the other participant directly from chat participants
   const otherParticipant = chat.isGroupChat
     ? null
     : getOtherParticipant(chat, loggedUser?._id);
@@ -24,7 +25,9 @@ const ChatPreview = ({ selectedChat, chat, loggedUser, user }) => {
               src={otherParticipant.picture || "defaultAvatar.webp"}
             />
           ) : (
-            <AvatarFallback className="font-semibold pb-0.5">{chat.isGroupChat ? "G" : "U"}</AvatarFallback> // 'G' for Group, 'U' for Undefined
+            <AvatarFallback className="font-semibold pb-0.5">
+              {chat.isGroupChat ? "G" : "U"}
+            </AvatarFallback>
           )}
         </Avatar>
       </div>
@@ -33,7 +36,9 @@ const ChatPreview = ({ selectedChat, chat, loggedUser, user }) => {
       </p>
       <div className="text-[#CFDBEC] text-sm col-start-2 row-start-2 col-span-5 pl-4">
         {chat.latestMessage && (
-          <span style={{ fontSize: "small" }}> {/* Changed <p> to <span> */}
+          <span style={{ fontSize: "small" }}>
+            {" "}
+            {/* Changed <p> to <span> */}
             <b>{chat.latestMessage.sender.userName} : </b>
             {chat.latestMessage.content.length > 50
               ? `${chat.latestMessage.content.substring(0, 51)}...`
