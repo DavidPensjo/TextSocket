@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ChatState } from "@/Context/ChatProvider";
 import {
@@ -19,11 +19,16 @@ import ChatDashboard from "./ChatDashboard";
 
 const ScrollableChat = ({ messages }) => {
   const { user } = ChatState();
-  const focusedSender =
-    messages
-      .slice()
-      .reverse()
-      .find((m) => m.sender._id !== user._id)?.sender || null;
+  const [focusedSender, setFocusedSender] = useState(null);
+
+  useEffect(() => {
+    const fs =
+      messages
+        .slice()
+        .reverse()
+        .find((m) => m.sender._id !== user._id)?.sender || null;
+    setFocusedSender(fs);
+  }, [messages, user]);
 
   return (
     <>

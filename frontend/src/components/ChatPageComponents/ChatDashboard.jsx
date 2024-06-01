@@ -1,40 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Users, UserPlus, UserMinus } from "lucide-react";
-import { ChatState } from "@/Context/ChatProvider";
 
-const ChatDashboard = () => {
-  const { selectedChat, loggedUser } = ChatState();
-  const [sender, setSender] = useState(null);
-
-  useEffect(() => {
-    if (selectedChat && !selectedChat.isGroupChat) {
-      // Assuming there are only two users in the chat, filter out the loggedUser
-      const otherUser = selectedChat.users.find(
-        (user) => user._id !== loggedUser._id
-      );
-      setSender(otherUser);
-    } else {
-      // For group chats or other scenarios, handle accordingly
-      setSender(null); // or set to a default group chat user object if needed
-    }
-  }, [selectedChat, loggedUser]);
-
+const ChatDashboard = ({ sender }) => {
+  // Check if the sender is null or undefined and handle this case
   if (!sender) {
-    return <div>Loading or no other participant...</div>; // Handle no sender or loading state
+    return <div>Loading or no other participant...</div>;
   }
 
+  // Function to handle the removal of a user from a chat
   const removeUserFromChat = async () => {
     try {
       const response = await axios.put(
         "/api/chat/groupremove",
         {
-          chatId: selectedChat._id,
-          userId: loggedUser._id,
+          chatId: sender.chat._id, // Assuming sender object includes chat info
+          userId: sender._id,
         },
         {
           headers: {
-            Authorization: `Bearer ${loggedUser.token}`,
+            Authorization: `Bearer ${sender.token}`, // Assuming sender object includes token
             "Content-Type": "application/json",
           },
         }
@@ -62,6 +47,7 @@ const ChatDashboard = () => {
         <span className="text-[#94A3B8] font-bold text-xl pl-3 pt-1 cursor-pointer">
           {sender.userName}
         </span>
+
         <div className="flex flex-row text-[#CFDBEC] gap-4 ml-auto pr-5">
           <a>
             <Users className="h-[29px] w-[29px]" />
@@ -69,11 +55,8 @@ const ChatDashboard = () => {
           <a>
             <UserPlus className="h-[29px] w-[29px]" />
           </a>
-          <a>
-            <UserMinus
-              onClick={removeUserFromChat}
-              className="text-[#CA5E5E] h-[29px] w-[29px]"
-            />
+          <a onClick={removeUserFromChat}>
+            <UserMinus className="text-[#CA5E5E] h-[29px] w-[29px]" />
           </a>
         </div>
       </div>
