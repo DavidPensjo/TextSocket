@@ -8,12 +8,20 @@ import messageRoutes from "./routes/messageRoutes.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import { Server as SocketIOServer } from "socket.io";
 import path from "path";
+import cors from "cors"; // Ensure cors is imported
 
 const app = express();
 dotenv.config();
 connectDB();
 
 app.use(express.json());
+
+// Set up CORS configuration
+const corsOptions = {
+  origin: process.env.CORS_ORIGIN,
+  credentials: true, // Allows cookies to be sent and received
+};
+app.use(cors(corsOptions));
 
 app.use("/api/user", userRoutes);
 app.use("/api/chat", chatRoutes);
@@ -76,8 +84,8 @@ io.on("connection", (socket) => {
       socket.to(user._id).emit("message recieved", newMessageRecieved);
     });
   });
-  socket.off("setup", () => {
+
+  socket.on("disconnect", () => {
     console.log("Disconnected from socket.io");
-    socket.leave(userData._id);
   });
 });
