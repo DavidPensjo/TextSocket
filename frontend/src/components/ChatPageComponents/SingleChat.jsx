@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { ChevronUp } from "lucide-react";
@@ -8,16 +8,18 @@ import io from "socket.io-client";
 import ChatSkeleton from "./MyChatsComponents/ChatSkeleton";
 
 const ENDPOINT = import.meta.env.VITE_API_URL || "http://localhost:5000";
-let socket, selectedChatCompare;
+let socket;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [messages, setMessages] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newMessage, setNewMessage] = useState("");
-  const { selectedChat, user } = ChatState();
+  const { selectedChat, user, notification, setNotification } = ChatState();
   const [socketConnected, setSocketConnected] = useState(false);
+  const [typing, setTyping] = useState(false);
+  const [isTyping, setIsTyping] = useState(false);
 
-  const fetchMessages = async () => {
+  const fetchMessages = useCallback(async () => {
     if (!selectedChat) return;
 
     try {
@@ -33,77 +35,96 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         `${ENDPOINT}/api/message/${selectedChat._id}`,
         config
       );
-
       setMessages(data);
       setLoading(false);
 
       socket.emit("join chat", selectedChat._id);
     } catch (error) {
-      console.error(error);
+      console.error("Failed to load messages:", error);
     }
-  };
+  }, [selectedChat, user]);
 
   useEffect(() => {
     socket = io(ENDPOINT, {
       withCredentials: true,
       path: "/socket.io",
     });
+
     socket.emit("setup", user);
     socket.on("connected", () => setSocketConnected(true));
-  }, [user]);
+    socket.on("typing", () => setIsTyping(true));
+    socket.on("stop typing", () => setIsTyping(false));
 
-  useEffect(() => {
-    fetchMessages();
-    selectedChatCompare = selectedChat;
-  }, [selectedChat]);
-
-  useEffect(() => {
     socket.on("message received", (newMessageReceived) => {
       if (
-        !selectedChatCompare ||
-        selectedChatCompare._id !== newMessageReceived.chat._id
+        !selectedChat ||
+        selectedChat._id !== newMessageReceived.chat._id
       ) {
-        //NOTIFICATION
+        if (!notification.includes(newMessageReceived)) {
+          setNotification([newMessageReceived, ...notification]);
+          setFetchAgain(!fetchAgain);
+        }
       } else {
         setMessages((prevMessages) => [...prevMessages, newMessageReceived]);
       }
     });
-  });
 
-  const handleSendMessage = async () => {
+    return () => {
+      socket.off("message received");
+      socket.disconnect();
+    };
+  }, [user, selectedChat, notification, setNotification, fetchAgain, setFetchAgain]);
+
+  useEffect(() => {
+    fetchMessages();
+  }, [fetchMessages]);
+
+  const sendMessage = async () => {
     if (newMessage.trim()) {
+      socket.emit("stop typing", selectedChat._id);
       try {
         const config = {
           headers: {
-            "Content-Type": "application/json",
+            "Content-type": "application/json",
             Authorization: `Bearer ${user.token}`,
           },
         };
-
         setNewMessage("");
         const { data } = await axios.post(
           `${ENDPOINT}/api/message`,
-          { content: newMessage, chatId: selectedChat._id },
+          {
+            content: newMessage,
+            chatId: selectedChat._id,
+          },
           config
         );
-
         socket.emit("new message", data);
         setMessages((prevMessages) => [...prevMessages, data]);
       } catch (error) {
-        console.error(error);
+        console.error("Failed to send message:", error);
       }
     }
   };
 
-  const handleKeyDown = (event) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      handleSendMessage();
-    }
-  };
+  const typingHandler = (e) => {
+    setNewMessage(e.target.value);
 
-  const typingHandler = (event) => {
-    setNewMessage(event.target.value);
+    if (!socketConnected) return;
+
+    if (!typing) {
+      setTyping(true);
+      socket.emit("typing", selectedChat._id);
+    }
+    let lastTypingTime = new Date().getTime();
+    var timerLength = 3000;
+    setTimeout(() => {
+      var timeNow = new Date().getTime();
+      var timeDiff = timeNow - lastTypingTime;
+      if (timeDiff >= timerLength && typing) {
+        socket.emit("stop typing", selectedChat._id);
+        setTyping(false);
+      }
+    }, timerLength);
   };
 
   return (
@@ -116,7 +137,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             className="flex flex-col"
             style={{ scrollbarWidth: "none" }}
             messages={messages}
-          ></ScrollableChat>
+          />
         </div>
       )}
       <form
@@ -129,11 +150,16 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           placeholder="Message..."
           value={newMessage}
           onChange={typingHandler}
-          onKeyDown={handleKeyDown}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              sendMessage();
+            }
+          }}
         />
         <Button
           type="button"
-          onClick={handleSendMessage}
+          onClick={sendMessage}
           className="w-[40px] h-[40px] bg-indigo-600"
         >
           <p>
@@ -141,6 +167,11 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           </p>
         </Button>
       </form>
+      {isTyping && (
+        <div className="typing-indicator">
+          <span>Typing...</span>
+        </div>
+      )}
     </>
   );
 };

@@ -8,26 +8,23 @@ import messageRoutes from "./routes/messageRoutes.js";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import { Server as SocketIOServer } from "socket.io";
 import path from "path";
-import cors from "cors"; // Ensure cors is imported
+import cors from "cors";
 
-const app = express();
 dotenv.config();
 connectDB();
 
+const app = express();
 app.use(express.json());
 
-// Set up CORS configuration
 const corsOptions = {
   origin: process.env.CORS_ORIGIN,
-  credentials: true, // Allows cookies to be sent and received
+  credentials: true,
 };
 app.use(cors(corsOptions));
 
 app.use("/api/user", userRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/message", messageRoutes);
-
-//** DEPLOYMENT */
 
 const __dirname1 = path.resolve();
 if (process.env.NODE_ENV === "production") {
@@ -42,8 +39,6 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
-//** DEPLOYMENT */
-
 app.use(notFound);
 app.use(errorHandler);
 
@@ -52,7 +47,6 @@ const server = app.listen(PORT, () =>
   console.log(colors.bold(`Server is running on PORT ${PORT}`))
 );
 
-// Socket.IO server configuration
 const io = new SocketIOServer(server, {
   pingTimeout: 60000,
   cors: {
@@ -83,7 +77,7 @@ io.on("connection", (socket) => {
     chat.users.forEach((user) => {
       if (user._id === newMessageRecieved.sender._id) return;
 
-      socket.to(user._id).emit("message recieved", newMessageRecieved);
+      socket.to(user._id).emit("message received", newMessageRecieved);
     });
   });
 
