@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,13 +15,14 @@ import { PasswordInput } from "@/components/ui/password-input";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
 import axios from "axios";
+import { ChatState } from "@/Context/ChatProvider"; // Adjust this path as needed
 
 function SignUp() {
   const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
-
+  const { setUser } = ChatState(); // Use setUser from your context
   const { toast } = useToast();
   const history = useHistory();
 
@@ -30,7 +31,7 @@ function SignUp() {
       toast({
         variant: "destructive",
         title: "Error signing up",
-        description: "Please fill all of the fields to sign up.",
+        description: "Please fill all fields to sign up.",
         action: <ToastAction altText="Try again">Try again</ToastAction>,
       });
       return;
@@ -39,14 +40,13 @@ function SignUp() {
     if (password !== passwordConfirmation) {
       toast({
         variant: "destructive",
-        title: "Error signing up",
+        title: "Password mismatch",
         description: "Passwords do not match.",
         action: <ToastAction altText="Try again">Try again</ToastAction>,
       });
       return;
     }
 
-    // Normalize the email to lower case before submitting
     const normalizedEmail = email.toLowerCase();
 
     try {
@@ -60,16 +60,17 @@ function SignUp() {
         { userName, email: normalizedEmail, password },
         config
       );
-      toast({
-        title: "Signed up successfully",
-        description: "You have successfully signed up.",
-      });
       localStorage.setItem("userInfo", JSON.stringify(data));
-      history.push("/chats");
+      setUser(data); // Update context with the new user
+      toast({
+        title: "Signup Successful",
+        description: "You have been signed up successfully.",
+      });
+      history.push("/chats"); // Redirect after state update
     } catch (err) {
       toast({
         variant: "destructive",
-        title: "Error signing up",
+        title: "Signup Error",
         description: err.response.data.message || "Something went wrong.",
       });
     }
@@ -79,33 +80,29 @@ function SignUp() {
     <div>
       <Card>
         <CardHeader>
-          <CardTitle>Sign up</CardTitle>
-          <CardDescription>
-            Create a new account by entering fields below.
-          </CardDescription>
+          <CardTitle>Sign Up</CardTitle>
+          <CardDescription>Create a new account.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-2">
           <div className="space-y-1">
             <Label>Email</Label>
-            <Input onChange={(e) => setEmail(e.target.value)} type="email" />
+            <Input value={email} onChange={(e) => setEmail(e.target.value)} type="email" />
           </div>
           <div className="space-y-1">
             <Label>Username</Label>
-            <Input onChange={(e) => setUserName(e.target.value)} />
+            <Input value={userName} onChange={(e) => setUserName(e.target.value)} />
           </div>
           <div className="space-y-1">
             <Label>Password</Label>
             <PasswordInput
-              id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               autoComplete="new-password"
             />
           </div>
           <div className="space-y-1">
-            <Label htmlFor="new">Confirm password</Label>
+            <Label>Confirm Password</Label>
             <PasswordInput
-              id="password_confirmation"
               value={passwordConfirmation}
               onChange={(e) => setPasswordConfirmation(e.target.value)}
               autoComplete="new-password"
@@ -113,7 +110,7 @@ function SignUp() {
           </div>
         </CardContent>
         <CardFooter>
-          <Button onClick={handleSignUp}>Sign up</Button>
+          <Button onClick={handleSignUp}>Sign Up</Button>
         </CardFooter>
       </Card>
     </div>
