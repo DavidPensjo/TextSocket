@@ -9,7 +9,7 @@ const ChatPreview = ({ selectedChat, chat, loggedUser, user }) => {
   const otherParticipant = chat.isGroupChat
     ? null
     : getOtherParticipant(chat, loggedUser?._id);
-
+  console.log(otherParticipant);
   return (
     <div
       className={`h-[80px] w-[330px] rounded-xl grid grid-cols-7 grid-rows-3 cursor-pointer ${

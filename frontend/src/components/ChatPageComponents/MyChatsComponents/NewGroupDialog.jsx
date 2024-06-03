@@ -119,7 +119,6 @@ const NewChatDialog = () => {
   };
 
   const handleDelete = (delUser) => {
-    console.log(selectedUsers);
     setSelectedUsers(selectedUsers.filter((sel) => sel._id !== delUser._id));
   };
 

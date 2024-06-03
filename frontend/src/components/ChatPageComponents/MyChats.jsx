@@ -33,7 +33,7 @@ const MyChats = ({ fetchAgain }) => {
             title: "Error accessing chat",
             description: "Something went wrong.",
           });
-          setIsLoading(false); // Ensure loading state is updated even on error
+          setIsLoading(false);
         }
       }
     };
@@ -95,7 +95,7 @@ const MyChats = ({ fetchAgain }) => {
             {loggedUser ? (
               <AvatarImage src={loggedUser.picture} />
             ) : (
-              <AvatarFallback>U</AvatarFallback> // Show fallback if no picture is available
+              <AvatarFallback>U</AvatarFallback>
             )}
           </Avatar>
           <LoggedInUser
