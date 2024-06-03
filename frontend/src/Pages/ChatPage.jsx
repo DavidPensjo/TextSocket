@@ -7,7 +7,6 @@ import { useState } from "react";
 const ChatPage = () => {
   const { user, isLoading } = ChatState();
   const [fetchAgain, setFetchAgain] = useState(false);
-  console.log(user);
   if (isLoading) {
     return <div>Loading...</div>;
   }
