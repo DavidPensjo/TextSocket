@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,15 +14,21 @@ import { Label } from "@/components/ui/label";
 import { PasswordInput } from "@/components/ui/password-input";
 import { ToastAction } from "@/components/ui/toast";
 import { useToast } from "@/components/ui/use-toast";
-import { ChatState } from "@/Context/ChatProvider"; // Adjust this path as needed
 import axios from "axios";
+import { ChatState } from "@/Context/ChatProvider";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const { user, setUser } = ChatState();
   const { toast } = useToast();
   const history = useHistory();
-  const { setUser } = ChatState();  // Destructure setUser from your context
+
+  useEffect(() => {
+    if (user) {
+      history.push("/chats");
+    }
+  }, [user, history]);
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -53,8 +59,7 @@ function Login() {
         description: "You have successfully logged in.",
       });
       localStorage.setItem("userInfo", JSON.stringify(data));
-      setUser(data);  // Update user state with the logged-in user data
-      history.push("/chats");  // Redirect after state update
+      setUser(data);
     } catch (err) {
       toast({
         variant: "destructive",
@@ -73,7 +78,7 @@ function Login() {
       <CardContent className="space-y-2">
         <div className="space-y-1">
           <Label>Email</Label>
-          <Input type="email" onChange={(e) => setEmail(e.target.value)} />
+          <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
         </div>
         <div className="space-y-1">
           <Label>Password</Label>

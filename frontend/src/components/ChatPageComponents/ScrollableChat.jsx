@@ -22,7 +22,6 @@ const ScrollableChat = ({ messages }) => {
     return selectedChat?.users.find((u) => u._id !== user._id) || null;
   }, [selectedChat, user]);
 
-  // Ensure messages is always an array
   const safeMessages = Array.isArray(messages) ? messages : [];
 
   return (
