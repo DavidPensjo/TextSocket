@@ -25,7 +25,7 @@ const chatModel = mongoose.Schema(
       ref: "User",
     },
   },
-  { timestams: true }
+  { timestamps: true }
 );
 
 const Chat = mongoose.model("Chat", chatModel);
