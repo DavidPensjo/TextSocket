@@ -20,51 +20,50 @@ import { ChatState } from "@/Context/ChatProvider";
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { user, setUser } = ChatState();
   const { toast } = useToast();
   const history = useHistory();
+  const { setUser, setLoggedUser, loggedUser, user } = ChatState();
 
   useEffect(() => {
-    if (user) {
+    if (user && loggedUser) {
+      console.log("user = " + user.userName);
       history.push("/chats");
     }
-  }, [user, history]);
+  }, [user, loggedUser, history]);
 
   const handleLogin = async () => {
     if (!email || !password) {
       toast({
         variant: "destructive",
         title: "Error logging in",
-        description: "Please fill all of the fields to log in.",
+        description: "Please fill all fields.",
         action: <ToastAction altText="Try again">Try again</ToastAction>,
       });
       return;
     }
 
-    const normalizedEmail = email.toLowerCase();
-
     try {
-      const config = {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      };
+      const config = { headers: { "Content-Type": "application/json" } };
+      const normalizedEmail = email.toLowerCase();
       const { data } = await axios.post(
         "/api/user/login",
         { email: normalizedEmail, password },
         config
       );
-      toast({
-        title: "Logged in successfully",
-        description: "You have successfully logged in.",
-      });
+
       localStorage.setItem("userInfo", JSON.stringify(data));
       setUser(data);
+      setLoggedUser(data);
+
+      toast({
+        title: "Logged in successfully",
+        description: "Welcome back!",
+      });
     } catch (err) {
       toast({
         variant: "destructive",
-        title: "Error logging in",
-        description: err.response.data.message || "Something went wrong.",
+        title: "Login Error",
+        description: err.response?.data.message || "An error occurred.",
       });
     }
   };
@@ -78,7 +77,11 @@ function Login() {
       <CardContent className="space-y-2">
         <div className="space-y-1">
           <Label>Email</Label>
-          <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <Input
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
         </div>
         <div className="space-y-1">
           <Label>Password</Label>
