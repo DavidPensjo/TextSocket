@@ -41,16 +41,19 @@ const MyChats = ({ fetchAgain }) => {
     fetchChats();
   }, [user, fetchAgain, setChats, toast]);
 
-  const filteredChats = chats.filter((chat) =>
-    chat.isGroupChat
-      ? chat.chatName.toLowerCase().includes(searchTerm.toLowerCase())
-      : chat.users.some(
-        (chatUser) =>
-          chatUser.userName.toLowerCase().includes(searchTerm.toLowerCase()) &&
-          chatUser._id !== loggedUser?._id
-      )
-      
-  );
+  const filteredChats = chats
+    .filter((chat) => chat.latestMessage) // Filter out chats with no messages
+    .filter((chat) =>
+      chat.isGroupChat
+        ? chat.chatName.toLowerCase().includes(searchTerm.toLowerCase())
+        : chat.users.some(
+            (chatUser) =>
+              chatUser.userName
+                .toLowerCase()
+                .includes(searchTerm.toLowerCase()) &&
+              chatUser._id !== loggedUser?._id
+          )
+    );
 
   if (isLoading) {
     return <div>Loading user data...</div>;
