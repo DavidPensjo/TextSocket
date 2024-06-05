@@ -9,7 +9,14 @@ const ChatPreview = ({ selectedChat, chat, loggedUser, user }) => {
   const otherParticipant = chat.isGroupChat
     ? null
     : getOtherParticipant(chat, loggedUser?._id);
-  console.log(otherParticipant);
+
+  const formatTime = (createdAt) => {
+    const date = new Date(createdAt);
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  };
+
+  const adjustedTime = chat.latestMessage ? formatTime(chat.latestMessage.createdAt) : "";
+
   return (
     <div
       className={`h-[80px] w-[330px] rounded-xl grid grid-cols-7 grid-rows-3 cursor-pointer ${
@@ -43,13 +50,7 @@ const ChatPreview = ({ selectedChat, chat, loggedUser, user }) => {
         )}
       </div>
       <p className="text-[#CFDBEC] text-sm col-start-7 row-start-1 pt-1">
-        {chat.latestMessage &&
-          chat.latestMessage.createdAt
-            .split("T")[1]
-            .split(".")[0]
-            .split(":")
-            .slice(0, 2)
-            .join(":")}
+        {adjustedTime}
       </p>
     </div>
   );
