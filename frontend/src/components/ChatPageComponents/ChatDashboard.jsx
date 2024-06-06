@@ -1,10 +1,11 @@
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Users, UserPlus, UserMinus } from "lucide-react";
+import axios from "axios";
 
 const ChatDashboard = ({ sender }) => {
   if (!sender) {
-    return <div>Loading or no other participant...</div>;
+    return;
   }
 
   const removeUserFromChat = async () => {
