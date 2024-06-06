@@ -32,9 +32,10 @@ const NewChatDialog = () => {
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [loadingChat, setLoadingChat] = useState(false);
   const { toast } = useToast();
 
-  const { user, chats, setChats } = ChatState();
+  const { user, chats, setChats, setSelectedChat } = ChatState();
 
   const handleSearch = async (query) => {
     setSearch(query);
@@ -79,8 +80,12 @@ const NewChatDialog = () => {
     }
 
     try {
+      setLoadingChat(true);
       const config = {
-        headers: { Authorization: `Bearer ${user.token}` },
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${user.token}`,
+        },
       };
       const { data } = await axios.post(
         "/api/chat/group",
@@ -92,6 +97,8 @@ const NewChatDialog = () => {
       );
 
       setChats([data, ...chats]);
+      setSelectedChat(data);
+      setLoadingChat(false);
       toast({ title: "Chat created successfully." });
     } catch (error) {
       console.error(error);
@@ -171,7 +178,12 @@ const NewChatDialog = () => {
               />
             ))}
           </div>
-          <Button className="w-28 self-end" onClick={handleSubmit}>
+          <Button
+            className="w-28 self-end"
+            onClick={handleSubmit}
+            key={user._id}
+            user={user}
+          >
             Create Chat
           </Button>
         </DialogDescription>
