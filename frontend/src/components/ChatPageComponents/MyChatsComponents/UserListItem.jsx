@@ -9,9 +9,9 @@ const UserListItem = ({ user, handleFunction }) => {
           <AvatarFallback src="https://github.com/shadcn.png"></AvatarFallback>
         </Avatar>
         <div className="">
-          <h1 className="text-lg font-semibold text-[#94A3B8]">
+          <p className="text-lg font-semibold text-[#94A3B8]">
             {user.userName}
-          </h1>
+          </p>
           <p className="text-base text-[#94A3B8]">{user.email}</p>
         </div>
       </div>
