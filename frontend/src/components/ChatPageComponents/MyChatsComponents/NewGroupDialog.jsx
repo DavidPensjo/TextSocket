@@ -133,7 +133,7 @@ const NewChatDialog = () => {
     <Dialog>
       <DialogTrigger asChild>
         <a>
-          <Button className="w-[60px] bg-[#2B2B3C] border-[#5E6875] border-2 hover:bg-slate-600 active:bg-[#2B2B3C] focus:bg-[#2B2B3C] transition ease-out delay-150 ">
+          <Button className="w-[60px] bg-[#2B2B3C] border-[#5E6875] border-2 hover:bg-slate-600 active:bg-[#2B2B3C] focus:bg-[#2B2B3C] transition ease-out delay-150 rounded-r-[10px] rounded-l-[0px] ">
             <img src="/NewGroup.png" alt="search" />
           </Button>
         </a>

@@ -61,9 +61,9 @@ const MyChats = ({ fetchAgain }) => {
 
   return (
     <div className="bg-[#494959] h-[760px] w-[380px] rounded-[8px] flex flex-col">
-      <div className="flex w-[380px] gap-3 pt-4 pl-5">
+      <div className="flex w-[380px] pt-4 pl-5">
         <input
-          className="w-[220px] h-[40px] bg-[#2B2B3C] border-[#2B2B3C] text-[#CFDBEC] rounded-l-[10px] pl-2 focus:outline-none"
+          className="w-[240px] h-[40px] bg-[#2B2B3C] border-[#2B2B3C] text-[#CFDBEC] rounded-l-[10px] pl-2 focus:outline-none"
           placeholder="Search..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}

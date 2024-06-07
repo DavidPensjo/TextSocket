@@ -19,7 +19,7 @@ const ChatPreview = ({ selectedChat, chat, loggedUser, user }) => {
 
   return (
     <div
-      className={`h-[80px] w-[330px] rounded-xl grid grid-cols-7 grid-rows-3 cursor-pointer ${
+      className={`h-[80px] w-[330px] rounded-xl grid grid-cols-7 grid-rows-3 cursor-pointer justify-center ${
         selectedChat === chat ? "bg-slate-700" : "bg-[#676773]"
       }`}
     >
