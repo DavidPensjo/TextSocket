@@ -5,7 +5,7 @@ import ChatBox from "@/components/ChatPageComponents/ChatBox";
 import { useState } from "react";
 
 const ChatPage = () => {
-  const { user, isLoading } = ChatState();
+  const { user, isLoading, selectedChat } = ChatState();
   const [fetchAgain, setFetchAgain] = useState(false);
   if (isLoading) {
     return <div>Loading...</div>;
@@ -16,7 +16,7 @@ const ChatPage = () => {
       <div className="w-[1000px] h-[800px] flex gap-5 bg-[#2B2B3C] rounded-[15px] p-4">
         {user && <MyChats fetchAgain={fetchAgain} />}
         <div className="flex flex-col justify-between h-[750px]">
-          {user && (
+          {selectedChat && (
             <ChatBox
               fetchAgain={fetchAgain}
               setFetchAgain={setFetchAgain}

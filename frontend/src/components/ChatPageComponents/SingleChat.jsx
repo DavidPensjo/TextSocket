@@ -56,7 +56,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     socket.on("stop typing", () => setIsTyping(false));
 
     socket.on("message received", (newMessageReceived) => {
-      if (!selectedChat || selectedChat._id !== newMessageReceived.chat._id) {
+      if (
+        !selectedChat ||
+        selectedChat._id !== newMessageReceived.chat._id
+      ) {
         if (!notification.includes(newMessageReceived)) {
           setNotification([newMessageReceived, ...notification]);
           setFetchAgain(!fetchAgain);
@@ -70,14 +73,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       socket.off("message received");
       socket.disconnect();
     };
-  }, [
-    user,
-    selectedChat,
-    notification,
-    setNotification,
-    fetchAgain,
-    setFetchAgain,
-  ]);
+  }, [user, selectedChat, notification, setNotification, fetchAgain, setFetchAgain]);
 
   useEffect(() => {
     fetchMessages();
@@ -144,37 +140,38 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           />
         </div>
       )}
-      {!selectedChat ? (
-        <></>
-      ) : (
-        <form
-          className="w-[600px] h-[40px] flex gap-3 pt-5"
-          onSubmit={(e) => e.preventDefault()}
+      <form
+        className="w-[600px] h-[40px] flex gap-3 pt-5"
+        onSubmit={(e) => e.preventDefault()}
+      >
+        <input
+          type="text"
+          className="w-[500px] h-[40px] bg-[#494959] border-[#2B2B3C] text-[#CFDBEC] rounded-[10px] pl-2 focus:outline-none"
+          placeholder="Message..."
+          value={newMessage}
+          onChange={typingHandler}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              sendMessage();
+            }
+          }}
+        />
+        
+        <Button
+          type="button"
+          onClick={sendMessage}
+          className="w-[40px] h-[40px] bg-indigo-600"
         >
-          <input
-            type="text"
-            className="w-[500px] h-[40px] bg-[#494959] border-[#2B2B3C] text-[#CFDBEC] rounded-[10px] pl-2 focus:outline-none"
-            placeholder="Message..."
-            value={newMessage}
-            onChange={typingHandler}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                sendMessage();
-              }
-            }}
-          />
-
-          <Button
-            type="button"
-            onClick={sendMessage}
-            className="w-[40px] h-[40px] bg-indigo-600"
-          >
-            <p>
-              <ChevronUp />
-            </p>
-          </Button>
-        </form>
+          <p>
+            <ChevronUp />
+          </p>
+        </Button>
+      </form>
+      {isTyping && (
+        <div className="typing-indicator">
+          <span>Typing...</span>
+        </div>
       )}
     </>
   );
