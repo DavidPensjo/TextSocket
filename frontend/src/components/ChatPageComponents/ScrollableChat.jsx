@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from "react";
+import React, { useEffect, useState, useRef, useMemo } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Tooltip,
@@ -18,17 +18,28 @@ import { ChatState } from "@/Context/ChatProvider";
 
 const ScrollableChat = ({ messages }) => {
   const { user, selectedChat } = ChatState();
+  const scrollRef = useRef(null);
+
   const sender = useMemo(() => {
     return selectedChat?.users.find((u) => u._id !== user._id) || null;
   }, [selectedChat, user]);
 
   const safeMessages = Array.isArray(messages) ? messages : [];
 
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [safeMessages]);
+
   return (
     <>
       <ChatDashboard sender={sender} />
       <div className="h-[600px] w-[575px]">
-        <ScrollArea className="h-[600px] w-[575px] overflow-y-auto">
+        <div
+          ref={scrollRef}
+          className="h-[600px] w-[575px] overflow-y-auto flex flex-col-reverse"
+        >
           {safeMessages.map((m, i) => (
             <div className="flex items-center mr-6" key={m._id}>
               {(isSameSender(safeMessages, m, i, user._id) ||
@@ -50,22 +61,24 @@ const ScrollableChat = ({ messages }) => {
                 </TooltipProvider>
               )}
               <span
+                className={`rounded-[20px] p-2 max-w-[75%] text-[#cfdbec] ${
+                  m.sender._id === user._id ? "bg-indigo-600" : "bg-[#494959]"
+                }`}
                 style={{
-                  backgroundColor:
-                    m.sender._id === user._id ? "#4f46e5" : "#494959",
-                  marginLeft: isSameSenderMargin(safeMessages, m, i, user._id),
+                  marginLeft: isSameSenderMargin(
+                    safeMessages,
+                    m,
+                    i,
+                    user._id
+                  ),
                   marginTop: isSameUser(safeMessages, m, i) ? 3 : 10,
-                  borderRadius: "20px",
-                  padding: "5px 15px",
-                  maxWidth: "75%",
-                  color: "#cfdbec",
                 }}
               >
                 {m.content}
               </span>
             </div>
           ))}
-        </ScrollArea>
+        </div>
       </div>
     </>
   );
