@@ -73,7 +73,7 @@ const MyChats = ({ fetchAgain }) => {
       </div>
       <div className="flex flex-col pt-8 items-center h-[610px]">
         {filteredChats.length > 0 ? (
-          <ScrollArea className="flex flex-col gap-5 w-[338px]">
+          <ScrollArea className="flex flex-col gap-5 w-[348px]">
             {filteredChats.map((chat) => (
               <React.Fragment key={chat._id}>
                 <a onClick={() => setSelectedChat(chat)}>
