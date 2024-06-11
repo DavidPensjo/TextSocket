@@ -120,7 +120,7 @@ const NewChatDialog = () => {
           <NewChat />
         </a>
       </DialogTrigger>
-      <DialogContent className="bg-[#494959] sm:max-w-[425px] rounded flex flex-col items-center border-[#494959] overflow-y-auto max-h-[800px]">
+      <DialogContent className="bg-[#494959] sm:max-w-[425px] sm:min-w-[425px] rounded flex flex-col items-center border-[#494959] overflow-y-auto max-h-[800px]">
         <DialogHeader>
           <DialogTitle className="text-[#CFDBEC]">
             {selectedUsers.length > 1
@@ -136,7 +136,7 @@ const NewChatDialog = () => {
             placeholder="Search for users"
             value={search}
             onChange={(e) => handleSearch(e.target.value)}
-            className="mt-2 mb-2 h-[40px] w-full bg-[#2B2B3C] border-[#2B2B3C] text-[#CFDBEC] pl-2 rounded-lg focus:outline-none"
+            className="sm:min-w-[300px] mt-2 mb-2 h-[40px] w-full bg-[#2B2B3C] border-[#2B2B3C] text-[#CFDBEC] pl-2 rounded-lg focus:outline-none"
           />
           <div className="mb-4">
             {searchResults.map((user) => (
@@ -155,10 +155,10 @@ const NewChatDialog = () => {
               placeholder="Group Chat Name"
               value={groupChatName}
               onChange={(e) => setGroupChatName(e.target.value)}
-              className="h-[40px] w-full bg-[#2B2B3C] border-[#2B2B3C] text-[#CFDBEC] pl-2 rounded-lg focus:outline-none"
+              className="mb-2 h-[40px] w-full bg-[#2B2B3C] border-[#2B2B3C] text-[#CFDBEC] pl-2 rounded-lg focus:outline-none"
             />
           )}
-          <div className="mt-2">
+          <div className="">
             {selectedUsers.map((user) => (
               <Badge key={user._id} user={user} className="self-start">
                 {user.userName}
@@ -171,9 +171,11 @@ const NewChatDialog = () => {
               </Badge>
             ))}
           </div>
-          <Button onClick={handleCreateChat} className="mt-2">
-            Create {selectedUsers.length > 1 ? "Group Chat" : "Chat"}
-          </Button>
+          {selectedUsers.length > 0 && (
+            <Button onClick={handleCreateChat} className="mt-2">
+              Create {selectedUsers.length > 1 ? "Group Chat" : "Chat"}
+            </Button>
+          )}
         </div>
       </DialogContent>
     </Dialog>
