@@ -9,6 +9,7 @@ import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import { Server as SocketIOServer } from "socket.io";
 import path from "path";
 import cors from "cors";
+import http from "http";
 
 dotenv.config();
 connectDB();
@@ -42,11 +43,8 @@ if (process.env.NODE_ENV === "production") {
 app.use(notFound);
 app.use(errorHandler);
 
-const PORT = process.env.PORT || 4000;
-const server = app.listen(PORT, () =>
-  console.log(colors.bold(`Server is running on PORT ${PORT}`))
-);
-
+const PORT = process.env.PORT || 5000;
+const server = http.createServer(app);
 const io = new SocketIOServer(server, {
   pingTimeout: 60000,
   cors: {
@@ -78,6 +76,10 @@ io.on("connection", (socket) => {
       if (user._id === newMessageRecieved.sender._id) return;
 
       socket.to(user._id).emit("message received", newMessageRecieved);
+      socket.to(user._id).emit("update chat preview", {
+        chatId: chat._id,
+        latestMessage: newMessageRecieved,
+      });
     });
   });
 
@@ -85,3 +87,7 @@ io.on("connection", (socket) => {
     console.log("Disconnected from socket.io");
   });
 });
+
+server.listen(PORT, () =>
+  console.log(colors.bold(`Server is running on PORT ${PORT}`))
+);

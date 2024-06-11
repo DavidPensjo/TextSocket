@@ -9,32 +9,57 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import axios from "axios";
+import io from "socket.io-client";
+
+const ENDPOINT = import.meta.env.VITE_API_URL || "http://localhost:5000";
+let socket;
 
 const MyChats = ({ fetchAgain }) => {
   const { toast } = useToast();
-  const { user, selectedChat, setSelectedChat, chats, setChats, loggedUser } =
-    ChatState();
+  const { user, selectedChat, setSelectedChat, chats, setChats, loggedUser } = ChatState();
   const [searchTerm, setSearchTerm] = useState("");
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    socket = io(ENDPOINT, { transports: ["websocket"] });
+    socket.emit("setup", user);
+
+    socket.on("update chat preview", (data) => {
+      setChats((currentChats) => {
+        const updatedChats = currentChats.map((chat) => {
+          if (chat._id === data.chatId) {
+            return { ...chat, latestMessage: data.latestMessage };
+          }
+          return chat;
+        });
+        return updatedChats;
+      });
+    });
+
+    return () => {
+      socket.off("update chat preview");
+      socket.disconnect();
+    };
+  }, [user, setChats]);
+
+  useEffect(() => {
     const fetchChats = async () => {
-      if (user && user.token) {
-        try {
-          const config = {
-            headers: { Authorization: `Bearer ${user.token}` },
-          };
-          const { data } = await axios.get(`/api/chat`, config);
-          setChats(data);
-          setIsLoading(false);
-        } catch (error) {
-          toast({
-            variant: "destructive",
-            title: "Error accessing chat",
-            description: "Something went wrong.",
-          });
-          setIsLoading(false);
-        }
+      if (!user || !user.token) return;
+
+      try {
+        const config = {
+          headers: { Authorization: `Bearer ${user.token}` },
+        };
+        const { data } = await axios.get(`/api/chat`, config);
+        setChats(data);
+        setIsLoading(false);
+      } catch (error) {
+        toast({
+          variant: "destructive",
+          title: "Error accessing chat",
+          description: "Something went wrong.",
+        });
+        setIsLoading(false);
       }
     };
 
@@ -42,7 +67,7 @@ const MyChats = ({ fetchAgain }) => {
   }, [user, fetchAgain, setChats, toast]);
 
   const filteredChats = chats
-    .filter((chat) => chat.latestMessage) // Filter out chats with no messages
+    .filter((chat) => chat.latestMessage)
     .filter((chat) =>
       chat.isGroupChat
         ? chat.chatName.toLowerCase().includes(searchTerm.toLowerCase())
@@ -51,7 +76,7 @@ const MyChats = ({ fetchAgain }) => {
               chatUser.userName
                 .toLowerCase()
                 .includes(searchTerm.toLowerCase()) &&
-              chatUser._id !== loggedUser?._id
+              chatUser._id !== user?._id
           )
     );
 
@@ -71,27 +96,24 @@ const MyChats = ({ fetchAgain }) => {
         <NewChatDialog />
         {/* <NewGroupDialog /> */}
       </div>
-      <div className="flex flex-col pt-8 items-center h-[610px]">
+      <ScrollArea className="flex flex-col pt-8 items-center h-[610px]">
         {filteredChats.length > 0 ? (
-          <ScrollArea className="flex flex-col gap-5 w-[348px]">
-            {filteredChats.map((chat) => (
-              <React.Fragment key={chat._id}>
-                <a onClick={() => setSelectedChat(chat)}>
-                  <ChatPreview
-                    chat={chat}
-                    selectedChat={selectedChat}
-                    loggedUser={loggedUser}
-                    user={user}
-                  />
-                </a>
-                <Separator className="my-2.5 bg-[#494959]" />
-              </React.Fragment>
-            ))}
-          </ScrollArea>
+          filteredChats.map((chat) => (
+            <React.Fragment key={chat._id}>
+              <a onClick={() => setSelectedChat(chat)}>
+                <ChatPreview
+                  chat={chat}
+                  selectedChat={selectedChat}
+                  user={user}
+                />
+              </a>
+              <Separator className="my-2.5 bg-[#494959]" />
+            </React.Fragment>
+          ))
         ) : (
           <div>No chats found.</div>
         )}
-      </div>
+      </ScrollArea>
       <div className="pt-6 pl-3">
         <div className="flex flex-row w-[322px] h-[60px] rounded-[10px] items-center pl-2 underline">
           <Avatar className="cursor-pointer">

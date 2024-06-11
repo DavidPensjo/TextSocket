@@ -56,10 +56,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     socket.on("stop typing", () => setIsTyping(false));
 
     socket.on("message received", (newMessageReceived) => {
-      if (
-        !selectedChat ||
-        selectedChat._id !== newMessageReceived.chat._id
-      ) {
+      if (!selectedChat || selectedChat._id !== newMessageReceived.chat._id) {
         if (!notification.includes(newMessageReceived)) {
           setNotification([newMessageReceived, ...notification]);
           setFetchAgain(!fetchAgain);
@@ -73,7 +70,14 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       socket.off("message received");
       socket.disconnect();
     };
-  }, [user, selectedChat, notification, setNotification, fetchAgain, setFetchAgain]);
+  }, [
+    user,
+    selectedChat,
+    notification,
+    setNotification,
+    fetchAgain,
+    setFetchAgain,
+  ]);
 
   useEffect(() => {
     fetchMessages();
@@ -100,6 +104,11 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         );
         socket.emit("new message", data);
         setMessages((prevMessages) => [...prevMessages, data]);
+        socket.emit("update chat preview", {
+          chatId: selectedChat._id,
+          latestMessage: data,
+          updatedAt: new Date().toISOString(),
+        });
       } catch (error) {
         console.error("Failed to send message:", error);
       }
@@ -157,7 +166,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             }
           }}
         />
-        
+
         <Button
           type="button"
           onClick={sendMessage}
