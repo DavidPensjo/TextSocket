@@ -84,7 +84,7 @@ const MyChats = ({ fetchAgain }) => {
     return <div>Loading user data...</div>;
   }
 
-  return (
+return (
     <div className="bg-[#494959] h-[760px] w-[380px] rounded-[8px] flex flex-col">
       <div className="flex w-[380px] pt-4 pl-5">
         <input
@@ -96,24 +96,27 @@ const MyChats = ({ fetchAgain }) => {
         <NewChatDialog />
         {/* <NewGroupDialog /> */}
       </div>
-      <ScrollArea className="flex flex-col pt-8 items-center h-[610px]">
+      <div className="flex flex-col pt-8 items-center h-[610px]">
         {filteredChats.length > 0 ? (
-          filteredChats.map((chat) => (
-            <React.Fragment key={chat._id}>
-              <a onClick={() => setSelectedChat(chat)}>
-                <ChatPreview
-                  chat={chat}
-                  selectedChat={selectedChat}
-                  user={user}
-                />
-              </a>
-              <Separator className="my-2.5 bg-[#494959]" />
-            </React.Fragment>
-          ))
+          <ScrollArea className="flex flex-col gap-5 w-[348px]">
+            {filteredChats.map((chat) => (
+              <React.Fragment key={chat._id}>
+                <a onClick={() => setSelectedChat(chat)}>
+                  <ChatPreview
+                    chat={chat}
+                    selectedChat={selectedChat}
+                    loggedUser={loggedUser}
+                    user={user}
+                  />
+                </a>
+                <Separator className="my-2.5 bg-[#494959]" />
+              </React.Fragment>
+            ))}
+          </ScrollArea>
         ) : (
           <div>No chats found.</div>
         )}
-      </ScrollArea>
+      </div>
       <div className="pt-6 pl-3">
         <div className="flex flex-row w-[322px] h-[60px] rounded-[10px] items-center pl-2 underline">
           <Avatar className="cursor-pointer">
