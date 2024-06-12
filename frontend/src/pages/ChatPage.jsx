@@ -1,6 +1,6 @@
 import { ChatState } from "@/Context/ChatProvider";
 import MyChats from "@/components/ChatPageComponents/MyChats";
-import ChatDashboard from "@/components/ChatPageComponents/ChatDashboard";
+import ChatDashboard from "@/components/ChatPageComponents/ChatBoxComponents/ChatDashboard";
 import ChatBox from "@/components/ChatPageComponents/ChatBox";
 import { useState } from "react";
 

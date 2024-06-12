@@ -5,7 +5,7 @@ import { ChevronUp } from "lucide-react";
 import { ChatState } from "@/Context/ChatProvider";
 import ScrollableChat from "./ScrollableChat";
 import io from "socket.io-client";
-import ChatSkeleton from "./MyChatsComponents/ChatSkeleton";
+import ChatSkeleton from "./ChatSkeleton";
 
 const ENDPOINT = import.meta.env.VITE_API_URL || "http://localhost:5000";
 let socket;

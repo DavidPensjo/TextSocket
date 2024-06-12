@@ -1,4 +1,4 @@
-import SingleChat from "./SingleChat";
+import SingleChat from "./ChatBoxComponents/SingleChat";
 
 const ChatBox = ({ fetchAgain, setFetchAgain }) => {
   return (
