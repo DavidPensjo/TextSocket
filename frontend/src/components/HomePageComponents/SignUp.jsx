@@ -22,7 +22,7 @@ function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordConfirmation, setPasswordConfirmation] = useState("");
-  const { setUser } = ChatState();
+  const { setUser, user } = ChatState();
   const { toast } = useToast();
   const history = useHistory();
 
@@ -63,7 +63,7 @@ function SignUp() {
       };
       const { data } = await axios.post(
         "/api/user",
-        { userName, email: normalizedEmail, password, picture },
+        { userName, email: normalizedEmail, password },
         config
       );
       localStorage.setItem("userInfo", JSON.stringify(data));
@@ -77,7 +77,7 @@ function SignUp() {
       toast({
         variant: "destructive",
         title: "Signup Error",
-        description: err.response.data.message || "Something went wrong.",
+        description: err.response?.data.message || "Something went wrong.",
       });
     }
   };
