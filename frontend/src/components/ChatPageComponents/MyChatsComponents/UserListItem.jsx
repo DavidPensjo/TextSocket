@@ -2,6 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Checkbox } from "@/components/ui/checkbox";
 import { UserMinus } from "lucide-react";
 import axios from "axios";
+import { useToast } from "@/components/ui/use-toast";
 
 const UserListItem = ({
   user,
@@ -12,6 +13,8 @@ const UserListItem = ({
   chatId,
   token,
 }) => {
+  const { toast } = useToast();
+
   const handleCheckboxChange = (event) => {
     event.stopPropagation();
     handleFunction(user);
@@ -33,13 +36,18 @@ const UserListItem = ({
           },
         }
       );
-      console.log(response)
+      console.log(response);
       if (response.status === 200) {
-        alert("User removed from chat.");
+        toast({
+          title: "User removed from chat.",
+        });
       }
     } catch (error) {
-      console.error("Failed to remove user from chat:", error);
-      alert("Failed to remove user from the chat.");
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to remove user from the chat.",
+      });
     }
   };
 
