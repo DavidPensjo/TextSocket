@@ -4,6 +4,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { UserMinus } from "lucide-react";
 import axios from "axios";
 import { useToast } from "@/components/ui/use-toast";
+import { ChatState } from "@/Context/ChatProvider";
 
 const UserListItem = ({
   user,
@@ -16,6 +17,7 @@ const UserListItem = ({
   updateUsersList,
 }) => {
   const { toast } = useToast();
+  const { loggedUser } = ChatState();
 
   const handleCheckboxChange = (event) => {
     event.stopPropagation();
@@ -64,8 +66,8 @@ const UserListItem = ({
           <AvatarFallback>{user.userName[0]}</AvatarFallback>
         </Avatar>
         <div>
-          <p className="text-lg font-semibold text-[#94A3B8]">
-            {user.userName}
+        <p className="text-lg font-semibold text-[#94A3B8]">
+            {loggedUser._id !== user._id ? user.userName : "You"}
           </p>
           <p className="text-sm text-[#94A3B8]">{user.email}</p>
         </div>

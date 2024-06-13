@@ -114,7 +114,7 @@ return (
             ))}
           </ScrollArea>
         ) : (
-          <div>No chats found.</div>
+          <div>NO CHATS AVAILABLE</div>
         )}
       </div>
       <div className="pt-6 pl-3">

@@ -1,7 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { getSender } from "@/config/ChatLogics";
 
-const ChatPreview = ({ selectedChat, chat, loggedUser, user }) => {
+const ChatPreview = ({ selectedChat, chat, loggedUser }) => {
   const getOtherParticipant = (chat, loggedUserId) => {
     return chat.users?.find((user) => user?._id !== loggedUserId);
   };
@@ -12,11 +12,13 @@ const ChatPreview = ({ selectedChat, chat, loggedUser, user }) => {
 
   const formatTime = (createdAt) => {
     const date = new Date(createdAt);
-    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   };
 
-  const adjustedTime = chat.latestMessage ? formatTime(chat.latestMessage.createdAt) : "";
-
+  const adjustedTime = chat.latestMessage
+    ? formatTime(chat.latestMessage.createdAt)
+    : "";
+  console.log(chat);
   return (
     <div
       className={`ml-1 h-[80px] w-[340px] rounded-xl grid grid-cols-7 grid-rows-3 cursor-pointer justify-center ${
@@ -29,9 +31,14 @@ const ChatPreview = ({ selectedChat, chat, loggedUser, user }) => {
             <AvatarImage
               src={otherParticipant.picture || "defaultAvatar.webp"}
             />
+          ) : chat.groupPicture ? (
+            <AvatarImage
+              className="font-semibold pb-0.5"
+              src={chat.groupPicture}
+            />
           ) : (
-            <AvatarFallback className="font-semibold pb-0.5">
-              {chat.isGroupChat ? "G" : "U"}
+            <AvatarFallback>
+              {chat?.chatName ? chat.chatName[0] : "U"}
             </AvatarFallback>
           )}
         </Avatar>
