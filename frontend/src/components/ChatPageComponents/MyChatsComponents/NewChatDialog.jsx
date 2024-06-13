@@ -146,6 +146,7 @@ const NewChatDialog = () => {
                 checked={selectedUsers.some(
                   (selectedUser) => selectedUser._id === user._id
                 )}
+                renderCheckbox={true}
                 handleFunction={() => handleAddUser(user)}
               />
             ))}

@@ -1,25 +1,73 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Checkbox } from "@/components/ui/checkbox";
+import { UserMinus } from "lucide-react";
+import axios from "axios";
 
-const UserListItem = ({ user, handleFunction, checked }) => {
+const UserListItem = ({
+  user,
+  handleFunction,
+  checked,
+  renderCheckbox,
+  renderChatOptions,
+  chatId,
+  token,
+}) => {
   const handleCheckboxChange = (event) => {
     event.stopPropagation();
     handleFunction(user);
   };
 
+  const removeUserFromChat = async (event) => {
+    event.stopPropagation();
+    try {
+      const response = await axios.put(
+        "/api/chat/groupremove",
+        {
+          chatId,
+          userId: user._id,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(response)
+      if (response.status === 200) {
+        alert("User removed from chat.");
+      }
+    } catch (error) {
+      console.error("Failed to remove user from chat:", error);
+      alert("Failed to remove user from the chat.");
+    }
+  };
+
   return (
-    <div onClick={() => handleFunction(user)} className="mt-2 cursor-pointer flex justify-between items-center p-2 bg-[#676773] rounded-xl">
+    <div
+      onClick={renderCheckbox ? () => handleFunction(user) : undefined}
+      className="mt-2 cursor-pointer flex justify-between items-center p-2 bg-[#676773] rounded-xl"
+    >
       <div className="flex items-center">
         <Avatar className="mr-3">
           <AvatarImage src={user.picture || "defaultAvatar.webp"} />
           <AvatarFallback>{user.userName[0]}</AvatarFallback>
         </Avatar>
         <div>
-          <p className="text-lg font-semibold text-[#94A3B8]">{user.userName}</p>
+          <p className="text-lg font-semibold text-[#94A3B8]">
+            {user.userName}
+          </p>
           <p className="text-sm text-[#94A3B8]">{user.email}</p>
         </div>
       </div>
-      <Checkbox checked={checked} onChange={handleCheckboxChange} />
+      {renderCheckbox && (
+        <Checkbox checked={checked} onChange={handleCheckboxChange} />
+      )}
+      {renderChatOptions && (
+        <a onClick={removeUserFromChat}>
+          <UserMinus className="text-[#CA5E5E] h-[25px] w-[25px]" />
+        </a>
+      )}
     </div>
   );
 };
