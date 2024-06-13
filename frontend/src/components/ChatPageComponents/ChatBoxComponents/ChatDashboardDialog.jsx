@@ -17,7 +17,6 @@ const ChatDashboardDialog = () => {
   const removeUserFromState = (userId) => {
     setChatUsers((prevUsers) => prevUsers.filter((u) => u._id !== userId));
   };
-
   return (
     <Dialog>
       <DialogTrigger>
