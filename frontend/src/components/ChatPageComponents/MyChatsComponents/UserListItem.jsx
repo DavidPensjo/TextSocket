@@ -1,3 +1,4 @@
+import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Checkbox } from "@/components/ui/checkbox";
 import { UserMinus } from "lucide-react";
@@ -12,6 +13,7 @@ const UserListItem = ({
   renderChatOptions,
   chatId,
   token,
+  updateUsersList,
 }) => {
   const { toast } = useToast();
 
@@ -36,11 +38,11 @@ const UserListItem = ({
           },
         }
       );
-      console.log(response);
       if (response.status === 200) {
         toast({
           title: "User removed from chat.",
         });
+        updateUsersList(user._id);
       }
     } catch (error) {
       toast({
