@@ -13,15 +13,22 @@ const HomePage = () => {
   }, [history]);
 
   return (
-    <div className="font-roboto flex bg-black h-screen w-screen justify-center items-center relative">
-      <div className="flex flex-col justify-center items-center">
-        <h1 className="text-7xl font-mono pb-10 text-white">TEXT SOCKET</h1>
-        <LoginSignUpTabs className="" />
+    <div className="font-roboto flex bg-black h-screen w-screen justify-center items-center relative overflow-hidden">
+      <div className="flex justify-center items-center h-full w-full">
+        <div className="flex flex-col justify-center items-center relative z-10">
+          <h1 className="text-7xl font-mono pb-10 text-white">TEXT SOCKET</h1>
+          <LoginSignUpTabs className="" />
+        </div>
+        <div
+          className="absolute right-0 flex items-center justify-center h-full"
+        >
+          <img
+            src={TextSocketHome}
+            alt="Background"
+            className="object-contain h-1/2"
+          />
+        </div>
       </div>
-      <img
-        className="absolute right-0 w-72 h-72 md:w-96 md:h-96 lg:w-[500px] lg:h-[500px] xl:w-[750px] xl:h-[700px]"
-        src={TextSocketHome}
-      />
     </div>
   );
 };
