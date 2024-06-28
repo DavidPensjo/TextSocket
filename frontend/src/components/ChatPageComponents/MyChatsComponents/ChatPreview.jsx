@@ -32,7 +32,7 @@ const ChatPreview = ({ selectedChat, chat, loggedUser }) => {
             />
           ) : chat.groupPicture ? (
             <AvatarImage
-              className="font-semibold pb-0.5"
+              className="font-semibold"
               src={chat.groupPicture}
             />
           ) : (

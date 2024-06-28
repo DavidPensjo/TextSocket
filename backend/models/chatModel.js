@@ -27,6 +27,7 @@ const chatModel = mongoose.Schema(
     groupPicture: {
       type: String,
       trim: true,
+      default: "/defaultAvatar.webp",
     },
   },
   { timestamps: true }

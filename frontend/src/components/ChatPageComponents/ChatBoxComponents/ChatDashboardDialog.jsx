@@ -6,6 +6,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 import { Users } from "lucide-react";
 import { ChatState } from "@/Context/ChatProvider";
 import UserListItem from "../MyChatsComponents/UserListItem";
@@ -38,9 +39,22 @@ const ChatDashboardDialog = () => {
             />
           ))}
         </div>
+        {selectedChat.isGroupChat && (
+          <div className="text-[#CFDBEC] w-full flex">
+            <div className="relative inline-block h-[80px] w-[80px]">
+              <img
+                className="h-full w-full rounded-full transition-transform duration-300 transform hover:scale-110 hover:opacity-80"
+                src={selectedChat.groupPicture}
+                alt="group picture"
+              />
+              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-70 rounded-full opacity-0 hover:opacity-100 transition-opacity duration-300">
+                <span className="text-white pl-3 cursor-pointer">Change Icon</span>
+              </div>
+            </div>
+          </div>
+        )}
       </DialogContent>
     </Dialog>
   );
 };
-
 export default ChatDashboardDialog;

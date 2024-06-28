@@ -7,6 +7,7 @@ const ChatDashboard = ({ sender }) => {
     return null;
   }
   const { selectedChat } = ChatState();
+  console.log(selectedChat);
   return (
     <div className="bg-[#494959] h-[80px] w-[560px] rounded-[8px]">
       <div className="flex flex-row items-center h-[80px] pl-5">
