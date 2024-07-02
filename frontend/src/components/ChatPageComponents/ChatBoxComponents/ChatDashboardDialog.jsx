@@ -18,12 +18,12 @@ const ChatDashboardDialog = () => {
   const { user, selectedChat, setSelectedChat } = ChatState();
   const [chatUsers, setChatUsers] = useState(selectedChat.users);
   const [groupName, setGroupName] = useState(selectedChat.chatName);
+  const [groupPicture, setGroupPicture] = useState(selectedChat.groupPicture);
   const { toast } = useToast();
 
   const removeUserFromState = (userId) => {
     setChatUsers((prevUsers) => prevUsers.filter((u) => u._id !== userId));
   };
-
 
   const handleSaveChanges = async () => {
     try {
@@ -46,6 +46,36 @@ const ChatDashboardDialog = () => {
         variant: "destructive",
         title: "Error",
         description: "Failed to update group name.",
+      });
+    }
+  };
+
+  const handlePictureChange = async (e) => {
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append("image", file);
+
+    try {
+      const { data } = await axios.put(
+        `/api/chat/grouppicture/${selectedChat._id}`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${user.token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      setGroupPicture(data.groupPicture);
+      setSelectedChat(data);
+      toast({
+        title: "Group picture updated successfully",
+      });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to update group picture.",
       });
     }
   };

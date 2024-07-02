@@ -157,6 +157,26 @@ const removeFromGroup = asyncHandler(async (req, res) => {
   }
 });
 
+const updateGroupPicture = asyncHandler(async (req, res) => {
+  const { chatId } = req.params;
+  const groupPicture = req.file.location;
+
+  const updatedChat = await Chat.findByIdAndUpdate(
+    chatId,
+    { groupPicture },
+    { new: true }
+  )
+    .populate("users", "-password")
+    .populate("groupAdmin", "-password");
+
+  if (!updatedChat) {
+    res.status(404);
+    throw new Error("Chat not found");
+  } else {
+    res.status(200).json(updatedChat);
+  }
+});
+
 export {
   accessChat,
   fetchChats,
@@ -164,4 +184,5 @@ export {
   renameGroup,
   addToGroup,
   removeFromGroup,
+  updateGroupPicture,
 };

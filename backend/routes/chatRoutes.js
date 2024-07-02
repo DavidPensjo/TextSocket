@@ -1,5 +1,6 @@
 import express from "express";
 import protect from "../middleware/authMiddleware.js";
+import upload from "../middleware/uploadMiddleware.js";
 import {
   accessChat,
   fetchChats,
@@ -7,6 +8,7 @@ import {
   renameGroup,
   addToGroup,
   removeFromGroup,
+  updateGroupPicture,
 } from "../controllers/chatControllers.js";
 
 const router = express.Router();
@@ -17,5 +19,8 @@ router.route("/group").post(protect, createGroupChat);
 router.route("/rename").put(protect, renameGroup);
 router.route("/groupadd").put(protect, addToGroup);
 router.route("/groupremove").put(protect, removeFromGroup);
+router
+  .route("/grouppicture/:chatId")
+  .put(protect, upload.single("image"), updateGroupPicture);
 
 export default router;
