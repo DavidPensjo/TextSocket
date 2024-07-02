@@ -18,7 +18,6 @@ const ChatPreview = ({ selectedChat, chat, loggedUser }) => {
   const adjustedTime = chat.latestMessage
     ? formatTime(chat.latestMessage.createdAt)
     : "";
-  console.log(chat);
   return (
     <div
       className={`ml-1 h-[80px] w-[340px] rounded-xl grid grid-cols-7 grid-rows-3 cursor-pointer justify-center ${
@@ -33,7 +32,7 @@ const ChatPreview = ({ selectedChat, chat, loggedUser }) => {
             />
           ) : chat.groupPicture ? (
             <AvatarImage
-              className="font-semibold pb-0.5"
+              className="font-semibold"
               src={chat.groupPicture}
             />
           ) : (

@@ -7,6 +7,7 @@ const ChatDashboard = ({ sender }) => {
     return null;
   }
   const { selectedChat } = ChatState();
+  console.log(selectedChat);
   return (
     <div className="bg-[#494959] h-[80px] w-[560px] rounded-[8px]">
       <div className="flex flex-row items-center h-[80px] pl-5">
@@ -30,7 +31,7 @@ const ChatDashboard = ({ sender }) => {
             </AvatarFallback>
           )}
         </Avatar>
-        <span className="text-[#94A3B8] font-bold text-xl pl-3 pt-1 cursor-pointer">
+        <span className="text-[#94A3B8] font-bold text-xl pl-3 pt-1">
           {selectedChat.isGroupChat ? selectedChat.chatName : sender.userName}
         </span>
         <div className="flex flex-row text-[#CFDBEC] gap-4 ml-auto pr-5">
