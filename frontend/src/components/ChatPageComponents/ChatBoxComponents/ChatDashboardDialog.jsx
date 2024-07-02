@@ -88,7 +88,7 @@ const ChatDashboardDialog = () => {
       <DialogContent className="bg-[#494959] sm:max-w-[425px] sm:min-w-[425px] rounded flex flex-col items-center border-[#494959] overflow-y-auto max-h-[800px]">
         {selectedChat.isGroupChat && (
           <div className="flex w-full p-4">
-            <div className="relative inline-block h-[100px] w-[100px] mr-4">
+            <div className="relative inline-block h-[100px] w-[100px] mr-4 mt-1">
               <img
                 className="h-full w-full rounded-full transition-transform duration-300 transform hover:scale-110 hover:opacity-80"
                 src={groupPicture}
@@ -106,7 +106,7 @@ const ChatDashboardDialog = () => {
                 </label>
               </div>
             </div>
-            <div className="flex flex-col gap-0.5 w-full">
+            <div className="flex flex-col gap-0.5 w-56">
               <p className="text-[#CFDBEC] font-bold">Group Name</p>
               <Input
                 className="bg-[#2B2B3C] border-[#2B2B3C] text-[#CFDBEC]"
