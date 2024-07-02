@@ -26,7 +26,6 @@ function Login() {
 
   useEffect(() => {
     if (user && loggedUser) {
-      console.log("user = " + user.userName);
       history.push("/chats");
     }
   }, [user, loggedUser, history]);
