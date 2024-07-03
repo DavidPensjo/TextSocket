@@ -92,7 +92,15 @@ const updateProfilePicture = asyncHandler(async (req, res) => {
     res.status(404);
     throw new Error("User not found");
   } else {
-    res.status(200).json(updatedUser);
+    const token = generateToken(updatedUser._id);
+
+    res.status(200).json({
+      _id: updatedUser._id,
+      userName: updatedUser.userName,
+      email: updatedUser.email,
+      picture: updatedUser.picture,
+      token,
+    });
   }
 });
 
