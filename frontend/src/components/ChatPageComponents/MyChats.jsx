@@ -89,7 +89,7 @@ return (
       <div className="flex w-[380px] pt-4 pl-5">
         <input
           className="w-[290px] h-[40px] bg-[#2B2B3C] border-[#2B2B3C] text-[#CFDBEC] rounded-l-[10px] pl-2 focus:outline-none"
-          placeholder="Search..."
+          placeholder="Filter chats..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
