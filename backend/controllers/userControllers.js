@@ -71,4 +71,37 @@ const allUsers = asyncHandler(async (req, res) => {
   res.send(users);
 });
 
-export { registerUser, authUser, allUsers };
+const updateProfilePicture = asyncHandler(async (req, res) => {
+  const userId = req.user._id;
+  console.log(req.file);
+
+  if (!req.file) {
+    res.status(400);
+    throw new Error("No file uploaded");
+  }
+
+  const profilePicture = req.file.location;
+
+  const updatedUser = await User.findByIdAndUpdate(
+    userId,
+    { picture: profilePicture },
+    { new: true }
+  ).select("-password");
+
+  if (!updatedUser) {
+    res.status(404);
+    throw new Error("User not found");
+  } else {
+    const token = generateToken(updatedUser._id);
+
+    res.status(200).json({
+      _id: updatedUser._id,
+      userName: updatedUser.userName,
+      email: updatedUser.email,
+      picture: updatedUser.picture,
+      token,
+    });
+  }
+});
+
+export { registerUser, authUser, allUsers, updateProfilePicture };

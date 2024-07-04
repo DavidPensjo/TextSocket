@@ -89,7 +89,7 @@ return (
       <div className="flex w-[380px] pt-4 pl-5">
         <input
           className="w-[290px] h-[40px] bg-[#2B2B3C] border-[#2B2B3C] text-[#CFDBEC] rounded-l-[10px] pl-2 focus:outline-none"
-          placeholder="Search..."
+          placeholder="Filter chats..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -119,7 +119,7 @@ return (
       </div>
       <div className="pt-6 pl-3">
         <div className="flex flex-row w-[322px] h-[60px] rounded-[10px] items-center pl-2 underline">
-          <Avatar className="cursor-pointer">
+          <Avatar>
             {user ? (
               <AvatarImage src={user?.picture} />
             ) : (
