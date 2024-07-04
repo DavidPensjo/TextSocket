@@ -88,23 +88,23 @@ const ChatDashboardDialog = () => {
       <DialogContent className="bg-[#494959] sm:max-w-[425px] sm:min-w-[425px] rounded flex flex-col items-center border-[#494959] overflow-y-auto max-h-[800px]">
         {selectedChat.isGroupChat && (
           <div className="flex w-full p-4">
-            <div className="relative inline-block h-[100px] w-[100px] mr-4 mt-1">
-              <img
-                className="h-full w-full rounded-full transition-transform duration-300 transform hover:scale-110 hover:opacity-80"
-                src={groupPicture}
-                alt="group picture"
-              />
-              <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-70 rounded-full opacity-0 hover:opacity-100 transition-opacity duration-300">
-                <label className="text-white pl-3 cursor-pointer">
-                  Change Icon
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={handlePictureChange}
-                  />
-                </label>
-              </div>
+            <div className="relative inline-block h-[100px] w-[100px] mr-4 mt-1 border-2 rounded-full border-[#2b2b3c]">
+              <label className="cursor-pointer h-full w-full block">
+                <img
+                  className="h-full w-full rounded-full transition-transform duration-300 transform hover:scale-110 hover:opacity-80"
+                  src={groupPicture}
+                  alt="group picture"
+                />
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handlePictureChange}
+                />
+                <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-80 rounded-full transition-opacity duration-300 opacity-0 hover:opacity-100">
+                  <span className="text-white">Change Icon</span>
+                </div>
+              </label>
             </div>
             <div className="flex flex-col gap-0.5 w-56">
               <p className="text-[#CFDBEC] font-bold">Group Name</p>

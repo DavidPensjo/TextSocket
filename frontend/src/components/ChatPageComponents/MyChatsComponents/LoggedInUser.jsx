@@ -43,10 +43,10 @@ const LoggedInUser = () => {
             </a>
           </DropdownMenuTrigger>
           <DropdownMenuContent className="bg-[#494959] border-2 border-[#5E6875] text-[#94A3B8]">
-            <DialogTrigger asChild>
+            <DialogTrigger asChild className="cursor-pointer">
               <DropdownMenuItem>Profile</DropdownMenuItem>
             </DialogTrigger>
-            <DropdownMenuItem onClick={logOutHandler}>Log out</DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer" onClick={logOutHandler}>Log out</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
         <ProfileDialog></ProfileDialog>

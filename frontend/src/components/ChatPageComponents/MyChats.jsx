@@ -119,7 +119,7 @@ return (
       </div>
       <div className="pt-6 pl-3">
         <div className="flex flex-row w-[322px] h-[60px] rounded-[10px] items-center pl-2 underline">
-          <Avatar className="cursor-pointer">
+          <Avatar>
             {user ? (
               <AvatarImage src={user?.picture} />
             ) : (
