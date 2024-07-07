@@ -30,7 +30,9 @@ function Login() {
     }
   }, [user, loggedUser, history]);
 
-  const handleLogin = async () => {
+  const handleLogin = async (event) => {
+    event.preventDefault(); // Prevent default form submission behavior
+
     if (!email || !password) {
       toast({
         variant: "destructive",
@@ -69,32 +71,37 @@ function Login() {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Log in</CardTitle>
-        <CardDescription>Enter your account details below.</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-2">
-        <div className="space-y-1">
-          <Label>Email</Label>
-          <Input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-        <div className="space-y-1">
-          <Label>Password</Label>
-          <PasswordInput
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            autoComplete="new-password"
-          />
-        </div>
-      </CardContent>
-      <CardFooter>
-        <Button onClick={handleLogin}>Log in</Button>
-      </CardFooter>
+      <form onSubmit={handleLogin}>
+        <CardHeader>
+          <CardTitle>Log in</CardTitle>
+          <CardDescription>Enter your account details below.</CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-2">
+          <div className="space-y-1">
+            <Label>Email</Label>
+            <Input
+              autoComplete="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
+          <div className="space-y-1">
+            <Label>Password</Label>
+            <PasswordInput
+              id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoComplete="new-password"
+              required
+            />
+          </div>
+        </CardContent>
+        <CardFooter>
+          <Button type="submit">Log in</Button>
+        </CardFooter>
+      </form>
     </Card>
   );
 }
