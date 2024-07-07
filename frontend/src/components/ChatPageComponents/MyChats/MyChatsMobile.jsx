@@ -85,7 +85,7 @@ const MyChatsMobile = ({ fetchAgain }) => {
 
   return (
     <div className="bg-[#494959] h-screen w-full rounded-[8px] flex flex-col justify-center items-center">
-      <div className="flex lg:w-4/5 w-11/12 center">
+      <div className="flex w-11/12 center">
         <input
           className="w-full h-[40px] bg-[#2B2B3C] border-[#2B2B3C] text-[#CFDBEC] rounded-l-[10px] pl-2 focus:outline-none"
           placeholder="Filter chats..."
@@ -115,7 +115,7 @@ const MyChatsMobile = ({ fetchAgain }) => {
           <div>NO CHATS AVAILABLE</div>
         )}
       </div>
-      <div className="w-screen">
+      <div className="w-screen pt-5">
         <div className="flex flex-row w-full h-[60px] rounded-[10px] items-center pl-5 underline">
           <Avatar>
             {user ? (
