@@ -67,7 +67,7 @@ const UserListItem = ({
         </Avatar>
         <div>
         <p className="text-lg font-semibold text-[#94A3B8]">
-            {loggedUser._id !== user._id ? user.userName : "You"}
+            {loggedUser?._id !== user?._id ? user?.userName : "You"}
           </p>
           <p className="text-sm text-[#94A3B8]">{user.email}</p>
         </div>
