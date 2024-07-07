@@ -32,7 +32,9 @@ function SignUp() {
     }
   }, [user, history]);
 
-  const handleSignUp = async () => {
+  const handleSignUp = async (event) => {
+    event.preventDefault(); // Prevent default form submission behavior
+
     if (!userName || !email || !password || !passwordConfirmation) {
       toast({
         variant: "destructive",
@@ -83,8 +85,8 @@ function SignUp() {
   };
 
   return (
-    <div>
-      <Card>
+    <Card>
+      <form onSubmit={handleSignUp}>
         <CardHeader>
           <CardTitle>Sign Up</CardTitle>
           <CardDescription>Create a new account.</CardDescription>
@@ -92,11 +94,21 @@ function SignUp() {
         <CardContent className="space-y-2">
           <div className="space-y-1">
             <Label>Email</Label>
-            <Input value={email} onChange={(e) => setEmail(e.target.value)} type="email" />
+            <Input
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              type="email"
+              required
+            />
           </div>
           <div className="space-y-1">
             <Label>Username</Label>
-            <Input value={userName} onChange={(e) => setUserName(e.target.value)} />
+            <Input
+              autoComplete="username"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+              required
+            />
           </div>
           <div className="space-y-1">
             <Label>Password</Label>
@@ -104,6 +116,7 @@ function SignUp() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               autoComplete="new-password"
+              required
             />
           </div>
           <div className="space-y-1">
@@ -112,14 +125,15 @@ function SignUp() {
               value={passwordConfirmation}
               onChange={(e) => setPasswordConfirmation(e.target.value)}
               autoComplete="new-password"
+              required
             />
           </div>
         </CardContent>
         <CardFooter>
-          <Button onClick={handleSignUp}>Sign Up</Button>
+          <Button type="submit">Sign Up</Button>
         </CardFooter>
-      </Card>
-    </div>
+      </form>
+    </Card>
   );
 }
 

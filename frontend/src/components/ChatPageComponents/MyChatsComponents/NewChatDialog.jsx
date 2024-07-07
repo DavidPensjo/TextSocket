@@ -139,7 +139,7 @@ const NewChatDialog = () => {
             className="sm:min-w-[300px] mt-2 mb-2 h-[40px] w-full bg-[#2B2B3C] border-[#2B2B3C] text-[#CFDBEC] pl-2 rounded-lg focus:outline-none"
           />
           <div className="mb-4">
-            {searchResults.map((user) => (
+            {searchResults.slice(0, 5).map((user) => (
               <UserListItem
                 key={user._id}
                 user={user}

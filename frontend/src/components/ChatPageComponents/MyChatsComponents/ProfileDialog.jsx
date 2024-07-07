@@ -49,7 +49,7 @@ function ProfileDialog() {
     <>
       <DialogContent className="bg-[#494959] sm:max-w-[425px] sm:min-w-[425px] border-[#494959] overflow-y-auto max-h-[800px]">
         <DialogHeader>
-          <DialogDescription className="text-[#CFDBEC] pt-4 flex flex-row">
+          <div className="text-[#CFDBEC] pt-4 flex flex-row">
             <div className="relative inline-block h-[100px] w-[100px] mr-4 border-2 rounded-full border-[#2b2b3c]">
               <label className="cursor-pointer h-full w-full block">
                 <img
@@ -71,7 +71,7 @@ function ProfileDialog() {
             <Label className="text-[#94a3b8] pt-14 text-3xl font-bold underline">
               {user.userName}
             </Label>
-          </DialogDescription>
+          </div>
         </DialogHeader>
         <DialogFooter>
           <DialogClose asChild>
