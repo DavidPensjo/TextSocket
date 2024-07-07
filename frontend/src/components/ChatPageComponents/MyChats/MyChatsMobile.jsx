@@ -84,7 +84,7 @@ const MyChatsMobile = ({ fetchAgain }) => {
   }
 
   return (
-    <div className="bg-[#494959] h-screen w-full rounded-[8px] flex flex-col justify-center items-center">
+    <div className="bg-[#494959] h-dvh w-full rounded-[8px] flex flex-col justify-center items-center">
       <div className="flex w-11/12 center">
         <input
           className="w-full h-[40px] bg-[#2B2B3C] border-[#2B2B3C] text-[#CFDBEC] rounded-l-[10px] pl-2 focus:outline-none"
