@@ -137,25 +137,25 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   };
 
   return (
-    <>
+    <div className="flex flex-col h-full">
       {loading ? (
         <ChatSkeleton />
       ) : (
-        <div>
+        <div className="flex-grow">
           <ScrollableChat
-            className="flex flex-col"
+            className="flex-grow"
             style={{ scrollbarWidth: "none" }}
             messages={messages}
           />
         </div>
       )}
       <form
-        className="w-[600px] h-[40px] flex gap-3 pt-5"
+        className="lg:w-[600px] lg:h-[40px] items-center w-full flex gap-3 lg:pt-12 p-2"
         onSubmit={(e) => e.preventDefault()}
       >
         <input
           type="text"
-          className="w-[500px] h-[40px] bg-[#494959] border-[#2B2B3C] text-[#CFDBEC] rounded-[10px] pl-2 focus:outline-none"
+          className="lg:w-[500px] w-full h-[40px] bg-[#494959] border-[#2B2B3C] text-[#CFDBEC] rounded-[10px] pl-2 focus:outline-none"
           placeholder="Message..."
           value={newMessage}
           onChange={typingHandler}
@@ -166,7 +166,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             }
           }}
         />
-
         <Button
           type="button"
           onClick={sendMessage}
@@ -182,7 +181,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           <span>Typing...</span>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

@@ -36,10 +36,10 @@ const ScrollableChat = ({ messages }) => {
       <ChatDashboard sender={sender} />
       <div
         ref={scrollRef}
-        className="h-[600px] w-[575px] overflow-y-auto flex flex-col"
+        className="lg:w-[575px] lg:h-[600px] w-screen overflow-y-auto flex flex-col"
       >
         {safeMessages.map((m, i) => (
-          <div className="flex items-center mr-6" key={m._id}>
+          <div className="flex items-center lg:ml-0 lg:mr-6 ml-2 mr-2" key={m._id}>
             {(isSameSender(safeMessages, m, i, user._id) ||
               isLastMessage(safeMessages, i, user._id)) && (
               <TooltipProvider key={m._id}>
