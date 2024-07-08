@@ -13,7 +13,7 @@ const HomePage = () => {
   }, [history]);
 
   return (
-    <div className="font-roboto flex bg-black h-screen w-screen justify-center items-center relative overflow-hidden">
+    <div className="font-roboto flex bg-black h-dvh w-screen justify-center items-center relative overflow-hidden">
       <div className="bg-black w-screen h-dvh lg:grid lg:grid-cols-9 lg:grid-rows-5 flex flex-col gap-10 lg:gap-0 justify-center">
         <div className="hidden lg:flex col-span-2 row-span-2 row-start-1 justify-center items-center">
           <EvervaultCard className="h-[300px] w-[300px] 2xl:h-[400px] 2xl:w-[400px] xxl:h-[500px] xxl:w-[500px]" />
