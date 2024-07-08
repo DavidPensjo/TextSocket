@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import LoginSignUpTabs from "@/components/HomePageComponents/LogInSignUpTabs";
 import { EvervaultCard } from "@/components/ui/evervault-card";
+import TextSocketHome from "@/assets/TextSocketLogoBlack.png";
 
 const HomePage = () => {
   const history = useHistory();
@@ -13,11 +14,25 @@ const HomePage = () => {
 
   return (
     <div className="font-roboto flex bg-black h-screen w-screen justify-center items-center relative overflow-hidden">
-      <div className="bg-black w-screen h-screen grid grid-cols-9 grid-rows-5">
-        <div className="col-span-2 row-span-2 row-start-1 flex justify-center items-center">
+      <div className="bg-black w-screen h-dvh lg:grid lg:grid-cols-9 lg:grid-rows-5 flex flex-col gap-10 lg:gap-0 justify-center">
+        <div className="hidden lg:flex col-span-2 row-span-2 row-start-1 justify-center items-center">
           <EvervaultCard className="h-[300px] w-[300px] 2xl:h-[400px] 2xl:w-[400px] xxl:h-[500px] xxl:w-[500px]" />
         </div>
-        <div className="text-3xl col-span-1 row-span-1 col-start-3 row-start-3 2xl:ml-40 w-[300px] 2xl:h-[350px] 2xl:w-[350px]">
+        <div className="flex">
+          <h1 className="lg:col-span-5 text-7xl font-mono text-white lg:col-start-3 lg:row-start-1 lg:mt-24 lg:pl-36">
+            TEXT SOCKET
+          </h1>
+          <div>
+            <img className="w-56" src={TextSocketHome} alt="TextSocketLogo" />
+          </div>
+        </div>
+
+        <div className="2xl:pl-20 lg:pl-40 lg:row-span-2 bg-black lg:col-start-6 lg:row-start-3 ">
+          <div className="bg-black flex flex-col justify-center items-center">
+            <LoginSignUpTabs className="" />
+          </div>
+        </div>
+        <div className="hidden lg:block text-2xl lg:col-span-1 lg:row-span-1 lg:col-start-3 lg:row-start-3 2xl:ml-40 w-[300px] 2xl:h-[350px] 2xl:w-[350px]">
           <p className="text-white">
             This page hosts a real-time chat application named TEXT SOCKET
           </p>
@@ -30,14 +45,6 @@ const HomePage = () => {
             <li>JWT</li>
             <li>Socket.io</li>
           </ul>
-        </div>
-        <h1 className="col-span-5 text-7xl font-mono text-white col-start-3 row-start-1 mt-24 pl-36">
-          TEXT SOCKET
-        </h1>
-        <div className="2xl:pl-20 pl-40 row-span-2 bg-black col-start-6 row-start-3">
-          <div className="bg-black flex flex-col justify-center items-center">
-            <LoginSignUpTabs className="" />
-          </div>
         </div>
       </div>
     </div>
