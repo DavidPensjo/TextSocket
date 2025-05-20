@@ -28,6 +28,25 @@ const MyChatsDesktop = ({ fetchAgain }) => {
       setChats((currentChats) => {
         const updatedChats = currentChats.map((chat) => {
           if (chat._id === data.chatId) {
+
+            if (data.latestMessage.sender._id !== user?._id && 
+                selectedChat?._id !== data.chatId) {
+              const notification = {
+                id: data.latestMessage._id,
+                chatId: data.chatId,
+                sender: data.latestMessage.sender.userName,
+                content: data.latestMessage.content,
+                timestamp: data.latestMessage.createdAt || new Date().toISOString(),
+                picture: data.latestMessage.sender.picture || "defaultAvatar.webp"
+              };
+              
+              localStorage.setItem('latestNotification', JSON.stringify(notification));
+
+              window.dispatchEvent(new CustomEvent('newChatNotification', { 
+                detail: notification 
+              }));
+            }
+            
             return { ...chat, latestMessage: data.latestMessage };
           }
           return chat;
@@ -40,7 +59,7 @@ const MyChatsDesktop = ({ fetchAgain }) => {
       socket.off("update chat preview");
       socket.disconnect();
     };
-  }, [user, setChats]);
+  }, [user, setChats, selectedChat]); // Add selectedChat to the dependency array
 
   useEffect(() => {
     const fetchChats = async () => {
@@ -65,6 +84,18 @@ const MyChatsDesktop = ({ fetchAgain }) => {
 
     fetchChats();
   }, [user, fetchAgain, setChats, toast]);
+
+  const handleChatSelect = (chat) => {
+    setSelectedChat(chat);
+    try {
+      const latestNotification = JSON.parse(localStorage.getItem('latestNotification') || '{}');
+      if (latestNotification.chatId === chat._id) {
+        localStorage.removeItem('latestNotification');
+      }
+    } catch (error) {
+      console.error("Error clearing notification:", error);
+    }
+  };
 
   const filteredChats = chats
     .filter((chat) => chat.latestMessage)
@@ -100,7 +131,7 @@ const MyChatsDesktop = ({ fetchAgain }) => {
           <ScrollArea className="flex flex-col gap-5 w-[348px]">
             {filteredChats.map((chat) => (
               <React.Fragment key={chat._id}>
-                <a onClick={() => setSelectedChat(chat)}>
+                <a onClick={() => handleChatSelect(chat)}>
                   <ChatPreview
                     chat={chat}
                     selectedChat={selectedChat}
